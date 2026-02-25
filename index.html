@@ -13,7 +13,6 @@
     --green: #06d6a0;
     --red: #ef233c;
     --white: #ffffff;
-    --card-bg: #f8f9ff;
     --shadow: 0 20px 60px rgba(13,27,62,0.18);
   }
 
@@ -23,11 +22,125 @@
     font-family: 'DM Sans', sans-serif;
     background: var(--navy);
     min-height: 100vh;
-    padding: 40px 20px;
-    background-image: 
+    padding: 40px 20px 60px;
+    background-image:
       radial-gradient(ellipse at 20% 20%, rgba(245,166,35,0.12) 0%, transparent 50%),
       radial-gradient(ellipse at 80% 80%, rgba(6,214,160,0.08) 0%, transparent 50%);
   }
+
+  /* ---- Admin Lock Button ---- */
+  #admin-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.25);
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #admin-toggle:hover { background: rgba(245,166,35,0.15); color: var(--gold); border-color: var(--gold); }
+  #admin-toggle.active { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+
+  /* ---- Modal Overlay ---- */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: #111e42;
+    border: 1px solid rgba(245,166,35,0.3);
+    border-radius: 20px;
+    padding: 36px 32px;
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+    animation: popIn 0.3s ease;
+  }
+  .modal h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .modal p { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 22px; }
+  .modal input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--white);
+    font-size: 18px;
+    text-align: center;
+    letter-spacing: 4px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    margin-bottom: 14px;
+  }
+  .modal input:focus { border-color: var(--gold); }
+  .modal input.error { border-color: var(--red); animation: shake 0.3s ease; }
+  .modal-error { font-size: 12px; color: var(--red); margin-bottom: 10px; min-height: 18px; }
+  .modal-btns { display: flex; gap: 10px; }
+  .btn-primary {
+    flex: 1;
+    background: var(--gold);
+    color: var(--navy);
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-secondary {
+    flex: 1;
+    background: transparent;
+    color: rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--red); color: var(--red); }
+
+  /* ---- Admin Mode Banner ---- */
+  #admin-banner {
+    display: none;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--navy);
+    text-align: center;
+    padding: 10px 20px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    animation: fadeDown 0.4s ease;
+  }
+  #admin-banner.show { display: block; }
+  #admin-banner span { font-size: 12px; opacity: 0.7; margin-left: 8px; }
 
   /* ---- Header ---- */
   .header {
@@ -54,12 +167,7 @@
     letter-spacing: 2px;
   }
   .header h1 span { color: var(--gold); }
-  .header p {
-    color: rgba(255,255,255,0.55);
-    font-size: 15px;
-    margin-top: 14px;
-    letter-spacing: 0.5px;
-  }
+  .header p { color: rgba(255,255,255,0.55); font-size: 15px; margin-top: 14px; }
   .prize-pill {
     display: inline-block;
     background: linear-gradient(135deg, var(--gold), var(--gold-light));
@@ -73,7 +181,7 @@
     animation: pulse 2s ease infinite;
   }
 
-  /* ---- Agent Tabs ---- */
+  /* ---- Tabs ---- */
   .tabs {
     display: flex;
     justify-content: center;
@@ -97,25 +205,15 @@
     text-transform: uppercase;
   }
   .tab:hover { border-color: var(--gold); color: var(--gold); }
-  .tab.active {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: var(--navy);
-    box-shadow: 0 4px 20px rgba(245,166,35,0.35);
-  }
+  .tab.active { background: var(--gold); border-color: var(--gold); color: var(--navy); box-shadow: 0 4px 20px rgba(245,166,35,0.35); }
 
-  /* ---- Cards Container ---- */
-  .cards-wrapper {
-    display: flex;
-    justify-content: center;
-    animation: fadeUp 0.6s 0.3s ease both;
-  }
+  /* ---- Cards ---- */
+  .cards-wrapper { display: flex; justify-content: center; animation: fadeUp 0.6s 0.3s ease both; }
   .card-panel { display: none; }
   .card-panel.active { display: block; }
 
-  /* ---- Bingo Card ---- */
   .bingo-card {
-    background: var(--card-bg);
+    background: #f8f9ff;
     border-radius: 24px;
     overflow: hidden;
     box-shadow: var(--shadow);
@@ -123,7 +221,6 @@
     max-width: 520px;
     transition: transform 0.3s ease;
   }
-  .bingo-card:hover { transform: translateY(-4px); }
 
   .card-header {
     background: var(--navy);
@@ -133,37 +230,14 @@
     align-items: center;
     border-bottom: 3px solid var(--gold);
   }
-  .card-header-left h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    color: var(--white);
-    letter-spacing: 2px;
-  }
-  .card-header-left .agent-name {
-    font-size: 13px;
-    color: var(--gold);
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-top: 2px;
-  }
-  .week-badge {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 10px;
-    padding: 8px 14px;
-    text-align: center;
-  }
+  .card-header-left h2 { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--white); letter-spacing: 2px; }
+  .card-header-left .agent-name { font-size: 13px; color: var(--gold); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+  .week-badge { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 8px 14px; text-align: center; }
   .week-badge .week-label { font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase; }
   .week-badge .week-val { font-size: 13px; color: var(--white); font-weight: 600; margin-top: 2px; }
 
   /* ---- Grid ---- */
-  .bingo-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0;
-    padding: 0;
-  }
+  .bingo-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
 
   .bingo-cell {
     aspect-ratio: 1;
@@ -173,97 +247,58 @@
     justify-content: center;
     padding: 14px 10px;
     text-align: center;
-    cursor: pointer;
     position: relative;
     border: 1px solid rgba(13,27,62,0.1);
     transition: all 0.2s ease;
     user-select: none;
     background: var(--white);
   }
-  .bingo-cell:hover { background: #eef2ff; }
+  /* Admin mode: cells are clickable */
+  .admin-mode .bingo-cell:not(.free) { cursor: pointer; }
+  .admin-mode .bingo-cell:not(.free):hover { background: #eef2ff; }
 
-  .bingo-cell .cell-icon {
-    font-size: 22px;
-    margin-bottom: 6px;
-    display: block;
-  }
-  .bingo-cell .cell-text {
-    font-size: 11.5px;
-    font-weight: 600;
-    color: var(--navy);
-    line-height: 1.35;
-  }
+  .bingo-cell .cell-icon { font-size: 22px; margin-bottom: 6px; display: block; }
+  .bingo-cell .cell-text { font-size: 11.5px; font-weight: 600; color: var(--navy); line-height: 1.35; }
 
-  /* FREE cell */
   .bingo-cell.free {
     background: linear-gradient(135deg, #06d6a0, #0cb58a);
-    cursor: default;
     pointer-events: none;
   }
   .bingo-cell.free .cell-text { color: white; font-size: 14px; font-weight: 700; }
   .bingo-cell.free .cell-icon { font-size: 28px; }
 
-  /* Checked state */
-  .bingo-cell.checked {
-    background: linear-gradient(135deg, var(--navy), #1a2f6e) !important;
-  }
+  .bingo-cell.checked { background: linear-gradient(135deg, var(--navy), #1a2f6e) !important; }
   .bingo-cell.checked .cell-text { color: var(--gold); }
-  .bingo-cell.checked .cell-icon { filter: grayscale(1) brightness(2); }
   .bingo-cell.checked::after {
     content: '✓';
     position: absolute;
-    top: 6px;
-    right: 8px;
+    top: 6px; right: 8px;
     font-size: 14px;
     color: var(--gold);
     font-weight: 900;
   }
 
-  /* WIN highlight */
-  .bingo-cell.winner {
-    background: linear-gradient(135deg, var(--gold), var(--gold-light)) !important;
-    animation: winPop 0.4s ease;
-  }
+  .bingo-cell.winner { background: linear-gradient(135deg, var(--gold), var(--gold-light)) !important; animation: winPop 0.4s ease; }
   .bingo-cell.winner .cell-text { color: var(--navy); }
   .bingo-cell.winner::after { color: var(--navy); }
 
+  /* ---- Win Banner ---- */
+  .win-banner { display: none; background: linear-gradient(135deg, var(--gold), var(--gold-light)); padding: 18px 24px; text-align: center; }
+  .win-banner.show { display: block; animation: fadeDown 0.5s ease; }
+  .win-banner h3 { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--navy); letter-spacing: 2px; }
+  .win-banner p { font-size: 13px; color: var(--navy); opacity: 0.7; margin-top: 4px; font-weight: 600; }
+
   /* ---- Card Footer ---- */
-  .card-footer {
-    background: var(--navy);
-    padding: 14px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+  .card-footer { background: var(--navy); padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
   .progress-wrap { flex: 1; margin-right: 16px; }
-  .progress-label {
-    font-size: 11px;
-    color: rgba(255,255,255,0.45);
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-  }
-  .progress-bar {
-    height: 6px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--gold), var(--gold-light));
-    border-radius: 10px;
-    transition: width 0.4s ease;
-    width: 11.1%; /* 1/9 for FREE square */
-  }
-  .squares-count {
-    font-size: 20px;
-    font-family: 'Bebas Neue', sans-serif;
-    color: var(--gold);
-    letter-spacing: 1px;
-    white-space: nowrap;
-  }
+  .progress-label { font-size: 11px; color: rgba(255,255,255,0.45); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.8px; }
+  .progress-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); border-radius: 10px; transition: width 0.4s ease; }
+  .squares-count { font-size: 20px; font-family: 'Bebas Neue', sans-serif; color: var(--gold); letter-spacing: 1px; white-space: nowrap; }
+
+  /* Admin reset button - only visible in admin mode */
   .reset-btn {
+    display: none;
     background: transparent;
     border: 1px solid rgba(255,255,255,0.2);
     color: rgba(255,255,255,0.4);
@@ -275,42 +310,15 @@
     transition: all 0.2s;
     margin-left: 10px;
   }
+  .admin-mode .reset-btn { display: block; }
   .reset-btn:hover { border-color: var(--red); color: var(--red); }
 
-  /* ---- Win Banner ---- */
-  .win-banner {
-    display: none;
-    background: linear-gradient(135deg, var(--gold), var(--gold-light));
-    padding: 18px 24px;
-    text-align: center;
-  }
-  .win-banner.show { display: block; animation: fadeDown 0.5s ease; }
-  .win-banner h3 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    color: var(--navy);
-    letter-spacing: 2px;
-  }
-  .win-banner p { font-size: 13px; color: var(--navy); opacity: 0.7; margin-top: 4px; font-weight: 600; }
-
   /* ---- Leaderboard ---- */
-  .leaderboard {
-    max-width: 520px;
-    margin: 40px auto 0;
-    animation: fadeUp 0.6s 0.4s ease both;
-  }
-  .leaderboard h3 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    color: var(--white);
-    letter-spacing: 2px;
-    margin-bottom: 16px;
-    text-align: center;
-  }
+  .leaderboard { max-width: 520px; margin: 40px auto 0; animation: fadeUp 0.6s 0.4s ease both; }
+  .leaderboard h3 { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--white); letter-spacing: 2px; margin-bottom: 16px; text-align: center; }
   .leaderboard h3 span { color: var(--gold); }
   .lb-row {
-    display: flex;
-    align-items: center;
+    display: flex; align-items: center;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 14px;
@@ -319,83 +327,29 @@
     transition: all 0.2s;
   }
   .lb-row:hover { background: rgba(255,255,255,0.08); }
-  .lb-rank {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 26px;
-    color: rgba(255,255,255,0.2);
-    width: 36px;
-  }
+  .lb-rank { font-family: 'Bebas Neue', sans-serif; font-size: 26px; color: rgba(255,255,255,0.2); width: 36px; }
   .lb-rank.gold { color: var(--gold); }
   .lb-rank.silver { color: #c0c0c0; }
   .lb-rank.bronze { color: #cd7f32; }
   .lb-agent { flex: 1; font-weight: 700; color: var(--white); font-size: 15px; }
-  .lb-squares {
-    font-size: 13px;
-    color: rgba(255,255,255,0.4);
-    margin-right: 12px;
-  }
-  .lb-wins {
-    background: var(--gold);
-    color: var(--navy);
-    font-weight: 700;
-    font-size: 12px;
-    padding: 4px 10px;
-    border-radius: 20px;
-    min-width: 70px;
-    text-align: center;
-  }
+  .lb-squares { font-size: 13px; color: rgba(255,255,255,0.4); margin-right: 12px; }
+  .lb-wins { background: var(--gold); color: var(--navy); font-weight: 700; font-size: 12px; padding: 4px 10px; border-radius: 20px; min-width: 70px; text-align: center; }
   .lb-wins.zero { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.3); }
 
   /* ---- Instructions ---- */
-  .instructions {
-    max-width: 520px;
-    margin: 24px auto 0;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-    padding: 20px 24px;
-    animation: fadeUp 0.6s 0.5s ease both;
-  }
-  .instructions h4 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
-    color: var(--gold);
-    letter-spacing: 1.5px;
-    margin-bottom: 10px;
-  }
+  .instructions { max-width: 520px; margin: 24px auto 0; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px 24px; animation: fadeUp 0.6s 0.5s ease both; }
+  .instructions h4 { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--gold); letter-spacing: 1.5px; margin-bottom: 10px; }
   .instructions ul { list-style: none; }
-  .instructions ul li {
-    font-size: 13px;
-    color: rgba(255,255,255,0.55);
-    padding: 4px 0;
-    padding-left: 18px;
-    position: relative;
-  }
-  .instructions ul li::before {
-    content: '→';
-    position: absolute;
-    left: 0;
-    color: var(--gold);
-  }
+  .instructions ul li { font-size: 13px; color: rgba(255,255,255,0.55); padding: 4px 0 4px 18px; position: relative; }
+  .instructions ul li::before { content: '→'; position: absolute; left: 0; color: var(--gold); }
 
   /* ---- Animations ---- */
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes pulse {
-    0%, 100% { box-shadow: 0 4px 20px rgba(245,166,35,0.4); }
-    50% { box-shadow: 0 4px 30px rgba(245,166,35,0.7); }
-  }
-  @keyframes winPop {
-    0% { transform: scale(0.9); }
-    60% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-  }
+  @keyframes fadeDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes pulse { 0%,100% { box-shadow:0 4px 20px rgba(245,166,35,0.4); } 50% { box-shadow:0 4px 30px rgba(245,166,35,0.7); } }
+  @keyframes winPop { 0% { transform:scale(0.9); } 60% { transform:scale(1.05); } 100% { transform:scale(1); } }
+  @keyframes popIn { from { opacity:0; transform:scale(0.9); } to { opacity:1; transform:scale(1); } }
+  @keyframes shake { 0%,100% { transform:translateX(0); } 25% { transform:translateX(-8px); } 75% { transform:translateX(8px); } }
 
   @media (max-width: 560px) {
     .bingo-cell .cell-text { font-size: 10px; }
@@ -405,6 +359,29 @@
 </head>
 <body>
 
+<!-- Password Modal -->
+<div class="modal-overlay" id="pw-modal">
+  <div class="modal">
+    <h3>🔐 ADMIN LOGIN</h3>
+    <p>Enter your password to manage the bingo board</p>
+    <input type="password" id="pw-input" placeholder="••••••••" maxlength="20" onkeydown="if(event.key==='Enter')checkPassword()">
+    <div class="modal-error" id="pw-error"></div>
+    <div class="modal-btns">
+      <button class="btn-primary" onclick="checkPassword()">Unlock</button>
+      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Lock Icon -->
+<button id="admin-toggle" onclick="toggleAdmin()" title="Admin Login">🔒</button>
+
+<!-- Admin Banner -->
+<div id="admin-banner">
+  🛠 ADMIN MODE — Click any square to mark it complete <span>(tap 🔓 again to lock)</span>
+</div>
+
+<!-- Header -->
 <div class="header">
   <div class="header-badge">🎯 Weekly Sales Challenge</div>
   <h1>BEYCOME<br><span>BINGO</span></h1>
@@ -412,13 +389,15 @@
   <div class="prize-pill">🏆 PRIZE: $100 CASH</div>
 </div>
 
+<!-- Tabs -->
 <div class="tabs">
-  <button class="tab active" onclick="switchAgent('rose')">Rose</button>
-  <button class="tab" onclick="switchAgent('kevin')">Kevin</button>
-  <button class="tab" onclick="switchAgent('sharon')">Sharon</button>
-  <button class="tab" onclick="switchAgent('marc')">Marc</button>
+  <button class="tab active" onclick="switchAgent(event,'rose')">Rose</button>
+  <button class="tab" onclick="switchAgent(event,'kevin')">Kevin</button>
+  <button class="tab" onclick="switchAgent(event,'sharon')">Sharon</button>
+  <button class="tab" onclick="switchAgent(event,'marc')">Marc</button>
 </div>
 
+<!-- Cards -->
 <div class="cards-wrapper">
 
   <!-- ROSE -->
@@ -434,55 +413,22 @@
           <div class="week-val">1 Week</div>
         </div>
       </div>
-      <div class="win-banner" id="win-rose">
-        <h3>🎉 BINGO! YOU WIN!</h3>
-        <p>Rose crushed it — claim your $100 prize! 💰</p>
-      </div>
+      <div class="win-banner" id="win-rose"><h3>🎉 BINGO! YOU WIN!</h3><p>Rose crushed it — claim your $100 prize! 💰</p></div>
       <div class="bingo-grid" id="grid-rose">
-        <!-- Row 1 -->
-        <div class="bingo-cell" onclick="toggle(this,'rose')">
-          <span class="cell-icon">⭐</span>
-          <span class="cell-text">Get a Google Review</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'rose')">
-          <span class="cell-icon">📋</span>
-          <span class="cell-text">Close an Enhanced Package</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'rose')">
-          <span class="cell-icon">🤝</span>
-          <span class="cell-text">Sell Broker Support</span>
-        </div>
-        <!-- Row 2 -->
-        <div class="bingo-cell" onclick="toggle(this,'rose')">
-          <span class="cell-icon">💰</span>
-          <span class="cell-text">Close a Deal Over $600</span>
-        </div>
-        <div class="bingo-cell free">
-          <span class="cell-icon">🌟</span>
-          <span class="cell-text">FREE</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'rose')">
-          <span class="cell-icon">🏠</span>
-          <span class="cell-text">Get 10 Free Listings in 1 Day</span>
-        </div>
-        <!-- Row 3 -->
-        <div class="bingo-cell" onclick="toggle(this,'rose')">
-          <span class="cell-icon">👑</span>
-          <span class="cell-text">Sell a Concierge</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'rose')">
-          <span class="cell-icon">📝</span>
-          <span class="cell-text">Sell Prepaid Title</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'rose')">
-          <span class="cell-icon">🔥</span>
-          <span class="cell-text">Close 4 Sales in One Day</span>
-        </div>
+        <div class="bingo-cell" onclick="adminToggle(this,'rose',0)"><span class="cell-icon">⭐</span><span class="cell-text">Get a Google Review</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'rose',1)"><span class="cell-icon">📋</span><span class="cell-text">Close an Enhanced Package</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'rose',2)"><span class="cell-icon">🤝</span><span class="cell-text">Sell Broker Support</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'rose',3)"><span class="cell-icon">💰</span><span class="cell-text">Close a Deal Over $600</span></div>
+        <div class="bingo-cell free"><span class="cell-icon">🌟</span><span class="cell-text">FREE</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'rose',5)"><span class="cell-icon">🏠</span><span class="cell-text">Get 10 Free Listings in 1 Day</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'rose',6)"><span class="cell-icon">👑</span><span class="cell-text">Sell a Concierge</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'rose',7)"><span class="cell-icon">📝</span><span class="cell-text">Sell Prepaid Title</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'rose',8)"><span class="cell-icon">🔥</span><span class="cell-text">Close 4 Sales in One Day</span></div>
       </div>
       <div class="card-footer">
         <div class="progress-wrap">
           <div class="progress-label">Progress</div>
-          <div class="progress-bar"><div class="progress-fill" id="prog-rose"></div></div>
+          <div class="progress-bar"><div class="progress-fill" id="prog-rose" style="width:11.1%"></div></div>
         </div>
         <div class="squares-count" id="count-rose">1 / 9</div>
         <button class="reset-btn" onclick="resetCard('rose')">Reset</button>
@@ -503,55 +449,22 @@
           <div class="week-val">1 Week</div>
         </div>
       </div>
-      <div class="win-banner" id="win-kevin">
-        <h3>🎉 BINGO! YOU WIN!</h3>
-        <p>Kevin crushed it — claim your $100 prize! 💰</p>
-      </div>
+      <div class="win-banner" id="win-kevin"><h3>🎉 BINGO! YOU WIN!</h3><p>Kevin crushed it — claim your $100 prize! 💰</p></div>
       <div class="bingo-grid" id="grid-kevin">
-        <!-- Row 1 (different order) -->
-        <div class="bingo-cell" onclick="toggle(this,'kevin')">
-          <span class="cell-icon">🔥</span>
-          <span class="cell-text">Close 4 Sales in One Day</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'kevin')">
-          <span class="cell-icon">👑</span>
-          <span class="cell-text">Sell a Concierge</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'kevin')">
-          <span class="cell-icon">💰</span>
-          <span class="cell-text">Close a Deal Over $600</span>
-        </div>
-        <!-- Row 2 -->
-        <div class="bingo-cell" onclick="toggle(this,'kevin')">
-          <span class="cell-icon">🏠</span>
-          <span class="cell-text">Get 10 Free Listings in 1 Day</span>
-        </div>
-        <div class="bingo-cell free">
-          <span class="cell-icon">🌟</span>
-          <span class="cell-text">FREE</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'kevin')">
-          <span class="cell-icon">⭐</span>
-          <span class="cell-text">Get a Google Review</span>
-        </div>
-        <!-- Row 3 -->
-        <div class="bingo-cell" onclick="toggle(this,'kevin')">
-          <span class="cell-icon">📝</span>
-          <span class="cell-text">Sell Prepaid Title</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'kevin')">
-          <span class="cell-icon">🤝</span>
-          <span class="cell-text">Sell Broker Support</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'kevin')">
-          <span class="cell-icon">📋</span>
-          <span class="cell-text">Close an Enhanced Package</span>
-        </div>
+        <div class="bingo-cell" onclick="adminToggle(this,'kevin',0)"><span class="cell-icon">🔥</span><span class="cell-text">Close 4 Sales in One Day</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'kevin',1)"><span class="cell-icon">👑</span><span class="cell-text">Sell a Concierge</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'kevin',2)"><span class="cell-icon">💰</span><span class="cell-text">Close a Deal Over $600</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'kevin',3)"><span class="cell-icon">🏠</span><span class="cell-text">Get 10 Free Listings in 1 Day</span></div>
+        <div class="bingo-cell free"><span class="cell-icon">🌟</span><span class="cell-text">FREE</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'kevin',5)"><span class="cell-icon">⭐</span><span class="cell-text">Get a Google Review</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'kevin',6)"><span class="cell-icon">📝</span><span class="cell-text">Sell Prepaid Title</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'kevin',7)"><span class="cell-icon">🤝</span><span class="cell-text">Sell Broker Support</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'kevin',8)"><span class="cell-icon">📋</span><span class="cell-text">Close an Enhanced Package</span></div>
       </div>
       <div class="card-footer">
         <div class="progress-wrap">
           <div class="progress-label">Progress</div>
-          <div class="progress-bar"><div class="progress-fill" id="prog-kevin"></div></div>
+          <div class="progress-bar"><div class="progress-fill" id="prog-kevin" style="width:11.1%"></div></div>
         </div>
         <div class="squares-count" id="count-kevin">1 / 9</div>
         <button class="reset-btn" onclick="resetCard('kevin')">Reset</button>
@@ -572,55 +485,22 @@
           <div class="week-val">1 Week</div>
         </div>
       </div>
-      <div class="win-banner" id="win-sharon">
-        <h3>🎉 BINGO! YOU WIN!</h3>
-        <p>Sharon crushed it — claim your $100 prize! 💰</p>
-      </div>
+      <div class="win-banner" id="win-sharon"><h3>🎉 BINGO! YOU WIN!</h3><p>Sharon crushed it — claim your $100 prize! 💰</p></div>
       <div class="bingo-grid" id="grid-sharon">
-        <!-- Row 1 -->
-        <div class="bingo-cell" onclick="toggle(this,'sharon')">
-          <span class="cell-icon">📝</span>
-          <span class="cell-text">Sell Prepaid Title</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'sharon')">
-          <span class="cell-icon">🏠</span>
-          <span class="cell-text">Get 10 Free Listings in 1 Day</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'sharon')">
-          <span class="cell-icon">⭐</span>
-          <span class="cell-text">Get a Google Review</span>
-        </div>
-        <!-- Row 2 -->
-        <div class="bingo-cell" onclick="toggle(this,'sharon')">
-          <span class="cell-icon">📋</span>
-          <span class="cell-text">Close an Enhanced Package</span>
-        </div>
-        <div class="bingo-cell free">
-          <span class="cell-icon">🌟</span>
-          <span class="cell-text">FREE</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'sharon')">
-          <span class="cell-icon">🔥</span>
-          <span class="cell-text">Close 4 Sales in One Day</span>
-        </div>
-        <!-- Row 3 -->
-        <div class="bingo-cell" onclick="toggle(this,'sharon')">
-          <span class="cell-icon">💰</span>
-          <span class="cell-text">Close a Deal Over $600</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'sharon')">
-          <span class="cell-icon">👑</span>
-          <span class="cell-text">Sell a Concierge</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'sharon')">
-          <span class="cell-icon">🤝</span>
-          <span class="cell-text">Sell Broker Support</span>
-        </div>
+        <div class="bingo-cell" onclick="adminToggle(this,'sharon',0)"><span class="cell-icon">📝</span><span class="cell-text">Sell Prepaid Title</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'sharon',1)"><span class="cell-icon">🏠</span><span class="cell-text">Get 10 Free Listings in 1 Day</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'sharon',2)"><span class="cell-icon">⭐</span><span class="cell-text">Get a Google Review</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'sharon',3)"><span class="cell-icon">📋</span><span class="cell-text">Close an Enhanced Package</span></div>
+        <div class="bingo-cell free"><span class="cell-icon">🌟</span><span class="cell-text">FREE</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'sharon',5)"><span class="cell-icon">🔥</span><span class="cell-text">Close 4 Sales in One Day</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'sharon',6)"><span class="cell-icon">💰</span><span class="cell-text">Close a Deal Over $600</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'sharon',7)"><span class="cell-icon">👑</span><span class="cell-text">Sell a Concierge</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'sharon',8)"><span class="cell-icon">🤝</span><span class="cell-text">Sell Broker Support</span></div>
       </div>
       <div class="card-footer">
         <div class="progress-wrap">
           <div class="progress-label">Progress</div>
-          <div class="progress-bar"><div class="progress-fill" id="prog-sharon"></div></div>
+          <div class="progress-bar"><div class="progress-fill" id="prog-sharon" style="width:11.1%"></div></div>
         </div>
         <div class="squares-count" id="count-sharon">1 / 9</div>
         <button class="reset-btn" onclick="resetCard('sharon')">Reset</button>
@@ -641,55 +521,22 @@
           <div class="week-val">1 Week</div>
         </div>
       </div>
-      <div class="win-banner" id="win-marc">
-        <h3>🎉 BINGO! YOU WIN!</h3>
-        <p>Marc crushed it — claim your $100 prize! 💰</p>
-      </div>
+      <div class="win-banner" id="win-marc"><h3>🎉 BINGO! YOU WIN!</h3><p>Marc crushed it — claim your $100 prize! 💰</p></div>
       <div class="bingo-grid" id="grid-marc">
-        <!-- Row 1 -->
-        <div class="bingo-cell" onclick="toggle(this,'marc')">
-          <span class="cell-icon">🤝</span>
-          <span class="cell-text">Sell Broker Support</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'marc')">
-          <span class="cell-icon">💰</span>
-          <span class="cell-text">Close a Deal Over $600</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'marc')">
-          <span class="cell-icon">👑</span>
-          <span class="cell-text">Sell a Concierge</span>
-        </div>
-        <!-- Row 2 -->
-        <div class="bingo-cell" onclick="toggle(this,'marc')">
-          <span class="cell-icon">⭐</span>
-          <span class="cell-text">Get a Google Review</span>
-        </div>
-        <div class="bingo-cell free">
-          <span class="cell-icon">🌟</span>
-          <span class="cell-text">FREE</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'marc')">
-          <span class="cell-icon">📋</span>
-          <span class="cell-text">Close an Enhanced Package</span>
-        </div>
-        <!-- Row 3 -->
-        <div class="bingo-cell" onclick="toggle(this,'marc')">
-          <span class="cell-icon">🔥</span>
-          <span class="cell-text">Close 4 Sales in One Day</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'marc')">
-          <span class="cell-icon">🏠</span>
-          <span class="cell-text">Get 10 Free Listings in 1 Day</span>
-        </div>
-        <div class="bingo-cell" onclick="toggle(this,'marc')">
-          <span class="cell-icon">📝</span>
-          <span class="cell-text">Sell Prepaid Title</span>
-        </div>
+        <div class="bingo-cell" onclick="adminToggle(this,'marc',0)"><span class="cell-icon">🤝</span><span class="cell-text">Sell Broker Support</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'marc',1)"><span class="cell-icon">💰</span><span class="cell-text">Close a Deal Over $600</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'marc',2)"><span class="cell-icon">👑</span><span class="cell-text">Sell a Concierge</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'marc',3)"><span class="cell-icon">⭐</span><span class="cell-text">Get a Google Review</span></div>
+        <div class="bingo-cell free"><span class="cell-icon">🌟</span><span class="cell-text">FREE</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'marc',5)"><span class="cell-icon">📋</span><span class="cell-text">Close an Enhanced Package</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'marc',6)"><span class="cell-icon">🔥</span><span class="cell-text">Close 4 Sales in One Day</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'marc',7)"><span class="cell-icon">🏠</span><span class="cell-text">Get 10 Free Listings in 1 Day</span></div>
+        <div class="bingo-cell" onclick="adminToggle(this,'marc',8)"><span class="cell-icon">📝</span><span class="cell-text">Sell Prepaid Title</span></div>
       </div>
       <div class="card-footer">
         <div class="progress-wrap">
           <div class="progress-label">Progress</div>
-          <div class="progress-bar"><div class="progress-fill" id="prog-marc"></div></div>
+          <div class="progress-bar"><div class="progress-fill" id="prog-marc" style="width:11.1%"></div></div>
         </div>
         <div class="squares-count" id="count-marc">1 / 9</div>
         <button class="reset-btn" onclick="resetCard('marc')">Reset</button>
@@ -709,51 +556,130 @@
 <div class="instructions">
   <h4>📌 How to Play</h4>
   <ul>
-    <li>Each agent has a unique randomized card</li>
-    <li>Click a square when you complete that achievement</li>
-    <li>Get a full row, column, or diagonal to win</li>
+    <li>Each agent has a unique randomized card with 8 challenges + FREE center</li>
+    <li>Complete a full ROW, COLUMN, or DIAGONAL to win</li>
     <li>First to BINGO wins the $100 prize</li>
-    <li>Round resets every week — new cards, new winners</li>
+    <li>Round resets every week — fresh cards, new winners</li>
+    <li>Progress is saved automatically — check back anytime to see standings</li>
   </ul>
 </div>
 
 <script>
-  // Track state per agent
-  const state = {
-    rose:   [false, false, false, false, true, false, false, false, false],
-    kevin:  [false, false, false, false, true, false, false, false, false],
-    sharon: [false, false, false, false, true, false, false, false, false],
-    marc:   [false, false, false, false, true, false, false, false, false],
-  };
+  const ADMIN_PASSWORD = '9164930';
+  const STORAGE_KEY = 'beycome_bingo_v1';
+  const WIN_PATTERNS = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  const AGENTS = ['rose','kevin','sharon','marc'];
+  const NAMES = { rose:'Rose', kevin:'Kevin', sharon:'Sharon', marc:'Marc' };
 
-  const wins = { rose: 0, kevin: 0, sharon: 0, marc: 0 };
+  let isAdmin = false;
 
-  // Win patterns for 3x3
-  const WIN_PATTERNS = [
-    [0,1,2],[3,4,5],[6,7,8], // rows
-    [0,3,6],[1,4,7],[2,5,8], // cols
-    [0,4,8],[2,4,6]          // diagonals
-  ];
-
-  function toggle(cell, agent) {
-    const grid = document.getElementById('grid-' + agent);
-    const cells = [...grid.querySelectorAll('.bingo-cell')];
-    const idx = cells.indexOf(cell);
-    if (idx === 4) return; // FREE
-    state[agent][idx] = !state[agent][idx];
-    cell.classList.toggle('checked', state[agent][idx]);
-    updateCard(agent);
+  // State: index 4 is always FREE (true)
+  function defaultState() {
+    return [false,false,false,false,true,false,false,false,false];
   }
 
-  function updateCard(agent) {
+  function loadState() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch(e) {}
+    const fresh = {};
+    AGENTS.forEach(a => fresh[a] = defaultState());
+    return fresh;
+  }
+
+  function saveState() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(boardState)); } catch(e) {}
+  }
+
+  let boardState = loadState();
+
+  // Ensure all agents exist in state
+  AGENTS.forEach(a => { if (!boardState[a]) boardState[a] = defaultState(); });
+
+  // ---- Admin ----
+  function toggleAdmin() {
+    if (isAdmin) {
+      lockAdmin();
+    } else {
+      document.getElementById('pw-modal').classList.add('show');
+      setTimeout(() => document.getElementById('pw-input').focus(), 100);
+    }
+  }
+
+  function checkPassword() {
+    const val = document.getElementById('pw-input').value;
+    const input = document.getElementById('pw-input');
+    const err = document.getElementById('pw-error');
+    if (val === ADMIN_PASSWORD) {
+      isAdmin = true;
+      document.getElementById('pw-modal').classList.remove('show');
+      document.getElementById('pw-input').value = '';
+      err.textContent = '';
+      input.classList.remove('error');
+      document.getElementById('admin-toggle').textContent = '🔓';
+      document.getElementById('admin-toggle').classList.add('active');
+      document.getElementById('admin-banner').classList.add('show');
+      document.body.classList.add('admin-mode');
+    } else {
+      input.classList.add('error');
+      err.textContent = 'Incorrect password. Try again.';
+      setTimeout(() => input.classList.remove('error'), 400);
+    }
+  }
+
+  function lockAdmin() {
+    isAdmin = false;
+    document.getElementById('admin-toggle').textContent = '🔒';
+    document.getElementById('admin-toggle').classList.remove('active');
+    document.getElementById('admin-banner').classList.remove('show');
+    document.body.classList.remove('admin-mode');
+  }
+
+  function closeModal() {
+    document.getElementById('pw-modal').classList.remove('show');
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-error').textContent = '';
+  }
+
+  // Close modal on overlay click
+  document.getElementById('pw-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // ---- Toggle Cells (admin only) ----
+  function adminToggle(cell, agent, idx) {
+    if (!isAdmin) return;
+    if (idx === 4) return;
+    boardState[agent][idx] = !boardState[agent][idx];
+    saveState();
+    renderCard(agent);
+    updateLeaderboard();
+  }
+
+  // ---- Reset ----
+  function resetCard(agent) {
+    if (!isAdmin) return;
+    if (!confirm(`Reset ${NAMES[agent]}'s card? This cannot be undone.`)) return;
+    boardState[agent] = defaultState();
+    saveState();
+    renderCard(agent);
+    updateLeaderboard();
+  }
+
+  // ---- Render Card ----
+  function renderCard(agent) {
     const grid = document.getElementById('grid-' + agent);
     const cells = [...grid.querySelectorAll('.bingo-cell')];
-    const s = state[agent];
+    const s = boardState[agent];
 
-    // Remove winner class first
-    cells.forEach(c => c.classList.remove('winner'));
+    cells.forEach((c, i) => {
+      if (i === 4) return;
+      c.classList.toggle('checked', s[i]);
+      c.classList.remove('winner');
+    });
 
-    // Check win
+    // Check win patterns
     let won = false;
     for (const pattern of WIN_PATTERNS) {
       if (pattern.every(i => s[i])) {
@@ -762,70 +688,52 @@
       }
     }
 
-    // Win banner
     const banner = document.getElementById('win-' + agent);
-    if (won && !banner.classList.contains('show')) {
-      banner.classList.add('show');
-      wins[agent]++;
-    } else if (!won) {
-      banner.classList.remove('show');
-    }
+    if (won) banner.classList.add('show');
+    else banner.classList.remove('show');
 
-    // Progress
     const completed = s.filter(Boolean).length;
     const pct = (completed / 9) * 100;
     document.getElementById('prog-' + agent).style.width = pct + '%';
     document.getElementById('count-' + agent).textContent = completed + ' / 9';
-
-    updateLeaderboard();
   }
 
-  function resetCard(agent) {
-    state[agent] = [false, false, false, false, true, false, false, false, false];
-    const grid = document.getElementById('grid-' + agent);
-    const cells = [...grid.querySelectorAll('.bingo-cell')];
-    cells.forEach((c, i) => {
-      c.classList.remove('checked', 'winner');
-      if (i === 4) c.classList.remove('checked');
-    });
-    document.getElementById('win-' + agent).classList.remove('show');
-    document.getElementById('prog-' + agent).style.width = '11.1%';
-    document.getElementById('count-' + agent).textContent = '1 / 9';
-    updateLeaderboard();
-  }
-
-  function switchAgent(agent) {
-    document.querySelectorAll('.card-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('panel-' + agent).classList.add('active');
-    event.target.classList.add('active');
-  }
-
+  // ---- Leaderboard ----
   function updateLeaderboard() {
-    const agents = ['rose','kevin','sharon','marc'];
-    const names = { rose:'Rose', kevin:'Kevin', sharon:'Sharon', marc:'Marc' };
-    const rankEmojis = ['🥇','🥈','🥉',''];
+    const rankEmojis = ['🥇','🥈','🥉','4'];
     const rankClasses = ['gold','silver','bronze',''];
 
-    const sorted = agents.map(a => ({
-      name: names[a],
-      id: a,
-      squares: state[a].filter(Boolean).length,
-      wins: wins[a]
-    })).sort((a,b) => b.squares - a.squares || b.wins - a.wins);
+    const sorted = AGENTS.map(a => {
+      const s = boardState[a];
+      const squares = s.filter(Boolean).length;
+      let bingos = 0;
+      for (const pattern of WIN_PATTERNS) {
+        if (pattern.every(i => s[i])) bingos++;
+      }
+      return { name: NAMES[a], id: a, squares, bingos };
+    }).sort((a,b) => b.bingos - a.bingos || b.squares - a.squares);
 
     const container = document.getElementById('leaderboard-rows');
     container.innerHTML = sorted.map((agent, i) => `
       <div class="lb-row">
-        <div class="lb-rank ${rankClasses[i]}">${rankEmojis[i] || (i+1)}</div>
+        <div class="lb-rank ${rankClasses[i]}">${rankEmojis[i]}</div>
         <div class="lb-agent">${agent.name}</div>
         <div class="lb-squares">${agent.squares}/9 squares</div>
-        <div class="lb-wins ${agent.wins === 0 ? 'zero' : ''}">${agent.wins > 0 ? `🏆 ${agent.wins} BINGO${agent.wins>1?'s':''}` : 'No wins yet'}</div>
+        <div class="lb-wins ${agent.bingos === 0 ? 'zero' : ''}">${agent.bingos > 0 ? `🏆 ${agent.bingos} BINGO${agent.bingos>1?'s':''}` : 'No wins yet'}</div>
       </div>
     `).join('');
   }
 
-  // Init leaderboard
+  // ---- Switch Agent Tab ----
+  function switchAgent(e, agent) {
+    document.querySelectorAll('.card-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + agent).classList.add('active');
+    e.target.classList.add('active');
+  }
+
+  // ---- Init ----
+  AGENTS.forEach(a => renderCard(a));
   updateLeaderboard();
 </script>
 </body>
