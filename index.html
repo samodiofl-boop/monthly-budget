@@ -3,503 +3,1155 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Beycome Sales Bingo 🎯</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Sam & Katherine — Money Coach</title>
 <style>
-  :root {
-    --navy: #0d1b3e;
-    --gold: #f5a623;
-    --gold-light: #ffd166;
-    --green: #06d6a0;
-    --red: #ef233c;
-    --white: #ffffff;
-    --shadow: 0 20px 60px rgba(13,27,62,0.18);
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--navy);
-    min-height: 100vh;
-    padding: 40px 20px 80px;
-    background-image:
-      radial-gradient(ellipse at 20% 20%, rgba(245,166,35,0.12) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 80%, rgba(6,214,160,0.08) 0%, transparent 50%);
-  }
+:root {
+  --bg: #fafaf7;
+  --surface: #ffffff;
+  --surface-2: #f4f3ee;
+  --text: #1a1a1a;
+  --text-2: #5f5e5a;
+  --text-3: #8a8980;
+  --border: rgba(0,0,0,0.08);
+  --border-2: rgba(0,0,0,0.15);
+  --accent: #185FA5;
+  --accent-bg: #E6F1FB;
+  --success: #0F6E56;
+  --success-bg: #E1F5EE;
+  --warning: #854F0B;
+  --warning-bg: #FAEEDA;
+  --danger: #993556;
+  --danger-bg: #FBEAF0;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 24px 20px 80px; }
 
-  /* Sync indicator */
-  #sync-dot {
-    position: fixed; top: 16px; right: 16px;
-    display: flex; align-items: center; gap: 7px;
-    background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px; padding: 6px 12px;
-    font-size: 11px; color: rgba(255,255,255,0.5); z-index: 50;
-  }
-  #sync-dot .dot { width:8px; height:8px; border-radius:50%; background:#aaa; transition:background 0.3s; }
-  #sync-dot.connected .dot { background: var(--green); animation: blink 2s infinite; }
-  #sync-dot.error .dot { background: var(--red); }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.login-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+.login-box {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+}
+.login-box h1 { font-size: 22px; font-weight: 500; margin-bottom: 8px; }
+.login-box p { color: var(--text-2); font-size: 14px; margin-bottom: 20px; }
+.login-box input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 0.5px solid var(--border-2);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-family: inherit;
+}
+.login-box input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.login-box button {
+  width: 100%;
+  padding: 12px;
+  background: var(--text);
+  color: var(--surface);
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+}
+.login-error { color: var(--danger); font-size: 13px; margin-top: 10px; min-height: 16px; }
 
-  /* Admin toggle */
-  #admin-toggle {
-    position: fixed; bottom: 20px; right: 20px;
-    width: 44px; height: 44px; border-radius: 50%;
-    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
-    color: rgba(255,255,255,0.25); font-size: 18px; cursor: pointer;
-    z-index: 100; transition: all 0.2s; display: flex; align-items: center; justify-content: center;
-  }
-  #admin-toggle:hover { background: rgba(245,166,35,0.15); color: var(--gold); border-color: var(--gold); }
-  #admin-toggle.active { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+h1 { font-size: 24px; font-weight: 500; letter-spacing: -0.01em; }
+h2 { font-size: 18px; font-weight: 500; margin-bottom: 12px; }
+.subtitle { color: var(--text-2); font-size: 14px; margin-bottom: 24px; }
 
-  /* Modal */
-  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:200; align-items:center; justify-content:center; }
-  .modal-overlay.show { display:flex; }
-  .modal { background:#111e42; border:1px solid rgba(245,166,35,0.3); border-radius:20px; padding:36px 32px; width:100%; max-width:360px; text-align:center; animation:popIn 0.3s ease; }
-  .modal h3 { font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--gold); letter-spacing:2px; margin-bottom:8px; }
-  .modal p { font-size:13px; color:rgba(255,255,255,0.45); margin-bottom:22px; }
-  .modal input { width:100%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:12px 16px; color:var(--white); font-size:18px; text-align:center; letter-spacing:4px; font-family:'DM Sans',sans-serif; outline:none; margin-bottom:14px; }
-  .modal input:focus { border-color:var(--gold); }
-  .modal input.error { border-color:var(--red); animation:shake 0.3s ease; }
-  .modal-error { font-size:12px; color:var(--red); margin-bottom:10px; min-height:18px; }
-  .modal-btns { display:flex; gap:10px; }
-  .btn-primary { flex:1; background:var(--gold); color:var(--navy); border:none; border-radius:10px; padding:12px; font-family:'DM Sans',sans-serif; font-weight:700; font-size:14px; cursor:pointer; transition:opacity 0.2s; }
-  .btn-primary:hover { opacity:0.85; }
-  .btn-secondary { flex:1; background:transparent; color:rgba(255,255,255,0.4); border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:12px; font-family:'DM Sans',sans-serif; font-size:14px; cursor:pointer; transition:all 0.2s; }
-  .btn-secondary:hover { border-color:var(--red); color:var(--red); }
+.sync-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: var(--success-bg);
+  color: var(--success);
+  font-size: 12px;
+  font-weight: 500;
+}
+.sync-status.syncing { background: var(--warning-bg); color: var(--warning); }
+.sync-status.error { background: var(--danger-bg); color: var(--danger); }
+.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
-  /* Admin banner */
-  #admin-banner { display:none; background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--navy); text-align:center; padding:10px 20px; border-radius:12px; margin-bottom:24px; font-weight:700; font-size:14px; max-width:520px; margin-left:auto; margin-right:auto; animation:fadeDown 0.4s ease; }
-  #admin-banner.show { display:block; }
-  #admin-banner span { font-size:12px; opacity:0.7; margin-left:8px; }
+.coach-banner {
+  background: var(--accent-bg);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  border-left: 3px solid var(--accent);
+  font-size: 14px;
+  color: #042C53;
+}
+.coach-banner strong { font-weight: 500; }
 
-  /* Header */
-  .header { text-align:center; margin-bottom:50px; animation:fadeDown 0.6s ease both; }
-  .header-badge { display:inline-block; background:var(--gold); color:var(--navy); font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:3px; padding:6px 18px; border-radius:30px; margin-bottom:14px; }
-  .header h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(52px,8vw,90px); color:var(--white); line-height:0.9; letter-spacing:2px; }
-  .header h1 span { color:var(--gold); }
-  .header p { color:rgba(255,255,255,0.55); font-size:15px; margin-top:14px; }
-  .prize-pill { display:inline-block; background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--navy); font-weight:700; font-size:14px; padding:8px 22px; border-radius:30px; margin-top:16px; box-shadow:0 4px 20px rgba(245,166,35,0.4); animation:pulse 2s ease infinite; }
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+  overflow-x: auto;
+}
+.tab {
+  background: none;
+  border: none;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--text-2);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.tab.active { color: var(--text); border-bottom-color: var(--text); }
+.tab:hover { color: var(--text); }
 
-  /* Tabs */
-  .tabs { display:flex; justify-content:center; gap:10px; margin-bottom:40px; flex-wrap:wrap; animation:fadeUp 0.6s 0.2s ease both; }
-  .tab { font-family:'DM Sans',sans-serif; font-weight:700; font-size:14px; letter-spacing:1px; padding:10px 26px; border-radius:30px; border:2px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.5); cursor:pointer; transition:all 0.25s ease; text-transform:uppercase; }
-  .tab:hover { border-color:var(--gold); color:var(--gold); }
-  .tab.active { background:var(--gold); border-color:var(--gold); color:var(--navy); box-shadow:0 4px 20px rgba(245,166,35,0.35); }
+.section { display: none; }
+.section.active { display: block; }
 
-  /* Cards */
-  .cards-wrapper { display:flex; justify-content:center; animation:fadeUp 0.6s 0.3s ease both; }
-  .card-panel { display:none; }
-  .card-panel.active { display:block; }
-  .bingo-card { background:#f8f9ff; border-radius:24px; overflow:hidden; box-shadow:var(--shadow); width:100%; max-width:520px; }
-  .card-header { background:var(--navy); padding:24px 28px 20px; display:flex; justify-content:space-between; align-items:center; border-bottom:3px solid var(--gold); }
-  .card-header-left h2 { font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--white); letter-spacing:2px; }
-  .card-header-left .agent-name { font-size:13px; color:var(--gold); font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-top:2px; }
-  .week-badge { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:8px 14px; text-align:center; }
-  .week-badge .week-label { font-size:10px; color:rgba(255,255,255,0.4); letter-spacing:1px; text-transform:uppercase; }
-  .week-badge .week-val { font-size:13px; color:var(--white); font-weight:600; margin-top:2px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.metric {
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+}
+.metric-label { font-size: 12px; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+.metric-value { font-size: 22px; font-weight: 500; }
+.metric-sub { font-size: 12px; color: var(--text-3); margin-top: 2px; }
 
-  /* Grid */
-  .bingo-grid { display:grid; grid-template-columns:repeat(3,1fr); }
-  .bingo-cell { aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:14px 10px; text-align:center; position:relative; border:1px solid rgba(13,27,62,0.1); transition:all 0.2s ease; user-select:none; background:var(--white); }
-  .admin-mode .bingo-cell:not(.free) { cursor:pointer; }
-  .admin-mode .bingo-cell:not(.free):hover { background:#eef2ff; }
-  .bingo-cell .cell-icon { font-size:22px; margin-bottom:6px; display:block; }
-  .bingo-cell .cell-text { font-size:11.5px; font-weight:600; color:var(--navy); line-height:1.35; }
-  .bingo-cell.free { background:linear-gradient(135deg,#06d6a0,#0cb58a); pointer-events:none; }
-  .bingo-cell.free .cell-text { color:white; font-size:14px; font-weight:700; }
-  .bingo-cell.free .cell-icon { font-size:28px; }
-  .bingo-cell.checked { background:linear-gradient(135deg,var(--navy),#1a2f6e) !important; }
-  .bingo-cell.checked .cell-text { color:var(--gold); }
-  .bingo-cell.checked::after { content:'✓'; position:absolute; top:6px; right:8px; font-size:14px; color:var(--gold); font-weight:900; }
-  .bingo-cell.winner { background:linear-gradient(135deg,var(--gold),var(--gold-light)) !important; animation:winPop 0.4s ease; }
-  .bingo-cell.winner .cell-text { color:var(--navy); }
-  .bingo-cell.winner::after { color:var(--navy); }
+.card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+}
 
-  /* Win banner */
-  .win-banner { display:none; background:linear-gradient(135deg,var(--gold),var(--gold-light)); padding:18px 24px; text-align:center; }
-  .win-banner.show { display:block; animation:fadeDown 0.5s ease; }
-  .win-banner h3 { font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--navy); letter-spacing:2px; }
-  .win-banner p { font-size:13px; color:var(--navy); opacity:0.7; margin-top:4px; font-weight:600; }
+.paycheck-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 16px;
+}
+.paycheck-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 0.5px solid var(--border);
+}
+.paycheck-name { font-size: 14px; color: var(--text-2); }
+.paycheck-amount { font-size: 22px; font-weight: 500; }
 
-  /* Card footer */
-  .card-footer { background:var(--navy); padding:14px 20px; display:flex; justify-content:space-between; align-items:center; }
-  .progress-wrap { flex:1; margin-right:16px; }
-  .progress-label { font-size:11px; color:rgba(255,255,255,0.45); margin-bottom:5px; text-transform:uppercase; letter-spacing:0.8px; }
-  .progress-bar { height:6px; background:rgba(255,255,255,0.1); border-radius:10px; overflow:hidden; }
-  .progress-fill { height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-light)); border-radius:10px; transition:width 0.4s ease; }
-  .squares-count { font-size:20px; font-family:'Bebas Neue',sans-serif; color:var(--gold); letter-spacing:1px; white-space:nowrap; }
-  .reset-btn { display:none; background:transparent; border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.4); font-size:11px; padding:6px 12px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; margin-left:10px; }
-  .admin-mode .reset-btn { display:block; }
-  .reset-btn:hover { border-color:var(--red); color:var(--red); }
+.bill-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+  padding: 7px 0;
+  font-size: 14px;
+  border-bottom: 0.5px solid var(--border);
+}
+.bill-row:last-child { border-bottom: none; }
+.bill-due { font-size: 12px; color: var(--text-3); }
+.bill-amount { font-variant-numeric: tabular-nums; }
+.bill-row .checkbox { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
 
-  /* Leaderboard */
-  .leaderboard { max-width:520px; margin:40px auto 0; animation:fadeUp 0.6s 0.4s ease both; }
-  .leaderboard h3 { font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--white); letter-spacing:2px; margin-bottom:16px; text-align:center; }
-  .leaderboard h3 span { color:var(--gold); }
-  .lb-row { display:flex; align-items:center; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:14px 20px; margin-bottom:10px; transition:all 0.2s; }
-  .lb-row:hover { background:rgba(255,255,255,0.08); }
-  .lb-rank { font-family:'Bebas Neue',sans-serif; font-size:26px; color:rgba(255,255,255,0.2); width:36px; }
-  .lb-rank.gold { color:var(--gold); }
-  .lb-rank.silver { color:#c0c0c0; }
-  .lb-rank.bronze { color:#cd7f32; }
-  .lb-agent { flex:1; font-weight:700; color:var(--white); font-size:15px; }
-  .lb-squares { font-size:13px; color:rgba(255,255,255,0.4); margin-right:12px; }
-  .lb-wins { background:var(--gold); color:var(--navy); font-weight:700; font-size:12px; padding:4px 10px; border-radius:20px; min-width:70px; text-align:center; }
-  .lb-wins.zero { background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.3); }
+.paycheck-footer {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 0.5px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 500;
+}
 
-  /* Instructions */
-  .instructions { max-width:520px; margin:24px auto 0; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:20px 24px; animation:fadeUp 0.6s 0.5s ease both; }
-  .instructions h4 { font-family:'Bebas Neue',sans-serif; font-size:18px; color:var(--gold); letter-spacing:1.5px; margin-bottom:10px; }
-  .instructions ul { list-style:none; }
-  .instructions ul li { font-size:13px; color:rgba(255,255,255,0.55); padding:4px 0 4px 18px; position:relative; }
-  .instructions ul li::before { content:'→'; position:absolute; left:0; color:var(--gold); }
+.debt-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 0.5px solid var(--border);
+}
+.debt-row:last-child { border-bottom: none; }
+.debt-name { font-weight: 500; font-size: 15px; }
+.debt-meta { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+.debt-bar-container {
+  grid-column: 1 / -1;
+  height: 6px;
+  background: var(--surface-2);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+.debt-bar { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.4s ease; }
+.debt-bar.danger { background: var(--danger); }
+.debt-bar.warning { background: var(--warning); }
+.debt-bar.success { background: var(--success); }
 
-  /* Animations */
-  @keyframes fadeDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes pulse { 0%,100%{box-shadow:0 4px 20px rgba(245,166,35,0.4)} 50%{box-shadow:0 4px 30px rgba(245,166,35,0.7)} }
-  @keyframes winPop { 0%{transform:scale(0.9)} 60%{transform:scale(1.05)} 100%{transform:scale(1)} }
-  @keyframes popIn { from{opacity:0;transform:scale(0.9)} to{opacity:1;transform:scale(1)} }
-  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
-  @media(max-width:560px){ .bingo-cell .cell-text{font-size:10px} .bingo-cell .cell-icon{font-size:18px} }
+.priority-tag {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+  margin-left: 6px;
+}
+.priority-tag.urgent { background: var(--danger-bg); color: var(--danger); }
+.priority-tag.high { background: var(--warning-bg); color: var(--warning); }
+.priority-tag.medium { background: var(--accent-bg); color: var(--accent); }
+.priority-tag.low { background: var(--surface-2); color: var(--text-2); }
+
+.alert {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+.alert.warning { background: var(--warning-bg); color: #633806; border-left: 3px solid var(--warning); }
+.alert.success { background: var(--success-bg); color: #085041; border-left: 3px solid var(--success); }
+.alert.danger { background: var(--danger-bg); color: #72243E; border-left: 3px solid var(--danger); }
+
+.spending-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.spend-card {
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+.spend-label { font-size: 13px; color: var(--text-2); margin-bottom: 4px; }
+.spend-current { font-size: 18px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.spend-target { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+.spend-progress { height: 4px; background: var(--surface); border-radius: 2px; overflow: hidden; margin-top: 6px; }
+.spend-progress-bar { height: 100%; background: var(--success); transition: width 0.3s; }
+.spend-progress-bar.over { background: var(--danger); }
+.spend-progress-bar.close { background: var(--warning); }
+
+input[type="number"], input[type="text"], input[type="password"], select {
+  font-family: inherit;
+  font-size: 14px;
+  padding: 6px 10px;
+  border: 0.5px solid var(--border-2);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+
+.btn {
+  font-family: inherit;
+  font-size: 13px;
+  padding: 8px 14px;
+  border: 0.5px solid var(--border-2);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+.btn:hover { background: var(--surface-2); }
+.btn.primary { background: var(--text); color: var(--surface); border-color: var(--text); }
+.btn.primary:hover { opacity: 0.85; }
+
+.add-spend {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.add-spend select { width: 140px; }
+.add-spend input[type="number"] { width: 100px; }
+.add-spend input[type="text"] { flex: 1; min-width: 120px; }
+
+.log-table { width: 100%; font-size: 13px; border-collapse: collapse; }
+.log-table th {
+  text-align: left;
+  font-weight: 500;
+  padding: 8px 10px;
+  border-bottom: 0.5px solid var(--border-2);
+  color: var(--text-2);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.log-table td { padding: 8px 10px; border-bottom: 0.5px solid var(--border); }
+.log-table .delete {
+  color: var(--text-3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+}
+.log-table .delete:hover { color: var(--danger); }
+.user-tag {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  margin-left: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.user-tag.sam { background: var(--accent-bg); color: var(--accent); }
+.user-tag.katherine { background: #FBEAF0; color: var(--danger); }
+
+.timeline-item {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 0.5px solid var(--border);
+}
+.timeline-item:last-child { border-bottom: none; }
+.timeline-month {
+  font-size: 12px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  min-width: 80px;
+}
+.timeline-event { font-size: 14px; }
+.timeline-event strong { font-weight: 500; }
+
+footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-3);
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 0.5px solid var(--border);
+}
+
+.user-toggle {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text-2);
+}
+.user-pill {
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: var(--surface-2);
+  cursor: pointer;
+  font-size: 12px;
+  border: 0.5px solid transparent;
+  font-family: inherit;
+}
+.user-pill.active { background: var(--accent-bg); color: var(--accent); border-color: var(--accent); font-weight: 500; }
+.user-pill[data-user="katherine"].active { background: #FBEAF0; color: var(--danger); border-color: var(--danger); }
+
+.month-toggle { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
+.month-pill {
+  padding: 6px 14px;
+  border-radius: 16px;
+  border: 0.5px solid var(--border-2);
+  background: var(--surface);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.month-pill.active { background: var(--text); color: var(--surface); border-color: var(--text); }
+
+.countdown {
+  display: inline-block;
+  padding: 4px 10px;
+  background: var(--warning-bg);
+  color: var(--warning);
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.countdown.urgent { background: var(--danger-bg); color: var(--danger); }
+
+@media (max-width: 600px) {
+  .container { padding: 16px 14px 80px; }
+  h1 { font-size: 20px; }
+  .metric-value { font-size: 18px; }
+  .paycheck-grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
 
-<!-- Sync Status -->
-<div id="sync-dot"><div class="dot"></div><span id="sync-label">Connecting...</span></div>
-
-<!-- Password Modal -->
-<div class="modal-overlay" id="pw-modal">
-  <div class="modal">
-    <h3>🔐 ADMIN LOGIN</h3>
-    <p>Enter your password to manage the bingo board</p>
-    <input type="password" id="pw-input" placeholder="••••••••" maxlength="20" onkeydown="if(event.key==='Enter')checkPassword()">
-    <div class="modal-error" id="pw-error"></div>
-    <div class="modal-btns">
-      <button class="btn-primary" onclick="checkPassword()">Unlock</button>
-      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
-    </div>
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <h1>Money Coach</h1>
+    <p>Enter the password to continue</p>
+    <input type="password" id="pwd-input" placeholder="Password" autocomplete="off">
+    <button id="login-btn">Unlock</button>
+    <div class="login-error" id="login-error"></div>
   </div>
 </div>
 
-<button id="admin-toggle" onclick="toggleAdmin()" title="Admin Login">🔒</button>
+<div class="container" id="app" style="display: none;">
 
-<div id="admin-banner">🛠 ADMIN MODE — Click any square to mark it complete <span>(tap 🔓 to lock)</span></div>
+<header>
+  <div>
+    <h1>Sam &amp; Katherine — Money Coach</h1>
+    <p class="subtitle" id="today-date"></p>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
+    <div class="user-toggle">
+      <span>Viewing as:</span>
+      <button class="user-pill active" data-user="sam">Sam</button>
+      <button class="user-pill" data-user="katherine">Katherine</button>
+    </div>
+    <div class="sync-status" id="sync-status">
+      <span class="sync-dot"></span>
+      <span id="sync-text">Connecting...</span>
+    </div>
+  </div>
+</header>
 
-<!-- Header -->
-<div class="header">
-  <div class="header-badge">🎯 Weekly Sales Challenge</div>
-  <h1>BEYCOME<br><span>BINGO</span></h1>
-  <p>Get a row, column, or diagonal to win</p>
-  <div class="prize-pill">🏆 PRIZE: $100 CASH</div>
-</div>
+<div class="coach-banner" id="coach-message">Loading your plan...</div>
 
-<!-- Tabs -->
 <div class="tabs">
-  <button class="tab active" onclick="switchAgent(event,'rose')">Rose</button>
-  <button class="tab" onclick="switchAgent(event,'kevin')">Kevin</button>
-  <button class="tab" onclick="switchAgent(event,'sharon')">Sharon</button>
-  <button class="tab" onclick="switchAgent(event,'marc')">Marc</button>
+  <button class="tab active" data-tab="overview">Overview</button>
+  <button class="tab" data-tab="paychecks">Paychecks</button>
+  <button class="tab" data-tab="debt">Debt Payoff</button>
+  <button class="tab" data-tab="spending">Daily Spending</button>
+  <button class="tab" data-tab="timeline">Timeline</button>
 </div>
 
-<!-- Cards -->
-<div class="cards-wrapper">
+<section id="overview" class="section active">
+  <div class="grid">
+    <div class="metric">
+      <div class="metric-label">Monthly Income</div>
+      <div class="metric-value">$9,909</div>
+      <div class="metric-sub">$4,954 × 2 paychecks</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Fixed Bills</div>
+      <div class="metric-value" id="fixed-total">—</div>
+      <div class="metric-sub" id="fixed-context">Current month</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Total Debt</div>
+      <div class="metric-value" id="total-debt">—</div>
+      <div class="metric-sub">5 active accounts</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Debt-Free Goal</div>
+      <div class="metric-value">Jan 2028</div>
+      <div class="metric-sub">~21 months at this pace</div>
+    </div>
+  </div>
 
-  <div class="card-panel active" id="panel-rose">
-    <div class="bingo-card">
-      <div class="card-header">
-        <div class="card-header-left"><h2>🎯 SALES BINGO</h2><div class="agent-name">Agent: Rose</div></div>
-        <div class="week-badge"><div class="week-label">Duration</div><div class="week-val">1 Week</div></div>
+  <div class="card">
+    <h2>This month's mission <span class="priority-tag urgent">May power month</span></h2>
+    <div class="alert success">
+      <strong>Why May matters:</strong> Rent is still $2,220 here vs $2,900 at the new place starting June 1. You have an extra $680 of breathing room this month — use it to crush debt before the higher rent kicks in.
+    </div>
+    <div class="grid" style="margin-top: 12px;">
+      <div class="metric">
+        <div class="metric-label">May Free Cash</div>
+        <div class="metric-value" id="may-free">—</div>
+        <div class="metric-sub">After fixed bills</div>
       </div>
-      <div class="win-banner" id="win-rose"><h3>🎉 BINGO! YOU WIN!</h3><p>Rose crushed it — claim your $100 prize! 💰</p></div>
-      <div class="bingo-grid" id="grid-rose">
-        <div class="bingo-cell" onclick="adminToggle(this,'rose',0)"><span class="cell-icon">⭐</span><span class="cell-text">Get a Google Review</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'rose',1)"><span class="cell-icon">📋</span><span class="cell-text">Close an Enhanced Package</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'rose',2)"><span class="cell-icon">🤝</span><span class="cell-text">Sell Broker Support</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'rose',3)"><span class="cell-icon">💰</span><span class="cell-text">Close a Deal Over $600</span></div>
-        <div class="bingo-cell free"><span class="cell-icon">🌟</span><span class="cell-text">FREE</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'rose',5)"><span class="cell-icon">🏠</span><span class="cell-text">Get 10 Free Listings in 1 Day</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'rose',6)"><span class="cell-icon">👑</span><span class="cell-text">Sell a Concierge</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'rose',7)"><span class="cell-icon">📝</span><span class="cell-text">Sell Prepaid Title</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'rose',8)"><span class="cell-icon">🔥</span><span class="cell-text">Close 4 Sales in One Day</span></div>
+      <div class="metric">
+        <div class="metric-label">Discover Target</div>
+        <div class="metric-value">$1,055</div>
+        <div class="metric-sub">Wipe it out by June</div>
       </div>
-      <div class="card-footer">
-        <div class="progress-wrap"><div class="progress-label">Progress</div><div class="progress-bar"><div class="progress-fill" id="prog-rose" style="width:11.1%"></div></div></div>
-        <div class="squares-count" id="count-rose">1 / 9</div>
-        <button class="reset-btn" onclick="resetCard('rose')">Reset</button>
+      <div class="metric">
+        <div class="metric-label">CareCredit Target</div>
+        <div class="metric-value">$567/mo</div>
+        <div class="metric-sub">Before promo expires</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Emergency Fund</div>
+        <div class="metric-value">+$700</div>
+        <div class="metric-sub">Build the cushion</div>
       </div>
     </div>
   </div>
 
-  <div class="card-panel" id="panel-kevin">
-    <div class="bingo-card">
-      <div class="card-header">
-        <div class="card-header-left"><h2>🎯 SALES BINGO</h2><div class="agent-name">Agent: Kevin</div></div>
-        <div class="week-badge"><div class="week-label">Duration</div><div class="week-val">1 Week</div></div>
+  <div class="card">
+    <h2>CareCredit promo countdown</h2>
+    <p style="font-size: 14px; color: var(--text-2); margin-bottom: 10px;">
+      Your 0% promo ends <strong style="color: var(--text);">November 1, 2026</strong>. If there's any balance left, you get backcharged ALL the interest from day one (typically 26.99%). Pay it off before then.
+    </p>
+    <div id="carecredit-countdown" class="countdown">Calculating...</div>
+    <div style="margin-top: 14px;">
+      <div class="debt-bar-container" style="height: 8px;">
+        <div class="debt-bar warning" id="carecredit-bar" style="width: 0%;"></div>
       </div>
-      <div class="win-banner" id="win-kevin"><h3>🎉 BINGO! YOU WIN!</h3><p>Kevin crushed it — claim your $100 prize! 💰</p></div>
-      <div class="bingo-grid" id="grid-kevin">
-        <div class="bingo-cell" onclick="adminToggle(this,'kevin',0)"><span class="cell-icon">🔥</span><span class="cell-text">Close 4 Sales in One Day</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'kevin',1)"><span class="cell-icon">👑</span><span class="cell-text">Sell a Concierge</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'kevin',2)"><span class="cell-icon">💰</span><span class="cell-text">Close a Deal Over $600</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'kevin',3)"><span class="cell-icon">🏠</span><span class="cell-text">Get 10 Free Listings in 1 Day</span></div>
-        <div class="bingo-cell free"><span class="cell-icon">🌟</span><span class="cell-text">FREE</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'kevin',5)"><span class="cell-icon">⭐</span><span class="cell-text">Get a Google Review</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'kevin',6)"><span class="cell-icon">📝</span><span class="cell-text">Sell Prepaid Title</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'kevin',7)"><span class="cell-icon">🤝</span><span class="cell-text">Sell Broker Support</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'kevin',8)"><span class="cell-icon">📋</span><span class="cell-text">Close an Enhanced Package</span></div>
-      </div>
-      <div class="card-footer">
-        <div class="progress-wrap"><div class="progress-label">Progress</div><div class="progress-bar"><div class="progress-fill" id="prog-kevin" style="width:11.1%"></div></div></div>
-        <div class="squares-count" id="count-kevin">1 / 9</div>
-        <button class="reset-btn" onclick="resetCard('kevin')">Reset</button>
+      <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-2); margin-top: 4px;">
+        <span>Paid: $<span id="carecredit-paid">0</span></span>
+        <span>Remaining: $<span id="carecredit-remaining">3,400</span></span>
       </div>
     </div>
   </div>
 
-  <div class="card-panel" id="panel-sharon">
-    <div class="bingo-card">
-      <div class="card-header">
-        <div class="card-header-left"><h2>🎯 SALES BINGO</h2><div class="agent-name">Agent: Sharon</div></div>
-        <div class="week-badge"><div class="week-label">Duration</div><div class="week-val">1 Week</div></div>
-      </div>
-      <div class="win-banner" id="win-sharon"><h3>🎉 BINGO! YOU WIN!</h3><p>Sharon crushed it — claim your $100 prize! 💰</p></div>
-      <div class="bingo-grid" id="grid-sharon">
-        <div class="bingo-cell" onclick="adminToggle(this,'sharon',0)"><span class="cell-icon">📝</span><span class="cell-text">Sell Prepaid Title</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'sharon',1)"><span class="cell-icon">🏠</span><span class="cell-text">Get 10 Free Listings in 1 Day</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'sharon',2)"><span class="cell-icon">⭐</span><span class="cell-text">Get a Google Review</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'sharon',3)"><span class="cell-icon">📋</span><span class="cell-text">Close an Enhanced Package</span></div>
-        <div class="bingo-cell free"><span class="cell-icon">🌟</span><span class="cell-text">FREE</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'sharon',5)"><span class="cell-icon">🔥</span><span class="cell-text">Close 4 Sales in One Day</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'sharon',6)"><span class="cell-icon">💰</span><span class="cell-text">Close a Deal Over $600</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'sharon',7)"><span class="cell-icon">👑</span><span class="cell-text">Sell a Concierge</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'sharon',8)"><span class="cell-icon">🤝</span><span class="cell-text">Sell Broker Support</span></div>
-      </div>
-      <div class="card-footer">
-        <div class="progress-wrap"><div class="progress-label">Progress</div><div class="progress-bar"><div class="progress-fill" id="prog-sharon" style="width:11.1%"></div></div></div>
-        <div class="squares-count" id="count-sharon">1 / 9</div>
-        <button class="reset-btn" onclick="resetCard('sharon')">Reset</button>
-      </div>
+  <div class="card">
+    <h2>Quick win checklist</h2>
+    <div id="checklist"></div>
+  </div>
+</section>
+
+<section id="paychecks" class="section">
+  <div class="month-toggle">
+    <button class="month-pill active" data-month="may">May 2026</button>
+    <button class="month-pill" data-month="june">June 2026</button>
+    <button class="month-pill" data-month="july">July 2026</button>
+  </div>
+  <div class="alert" id="month-note"></div>
+  <div class="paycheck-grid" id="paycheck-grid"></div>
+</section>
+
+<section id="debt" class="section">
+  <div class="card">
+    <h2>Payoff order &mdash; smart strategy</h2>
+    <p style="font-size: 14px; color: var(--text-2); margin-bottom: 14px;">
+      <strong>Hybrid approach:</strong> CareCredit first (deferred-interest deadline), then highest APR (Discover 25.49%, Best Egg 24.99%), then knock out smaller balances.
+    </p>
+    <div id="debt-list"></div>
+  </div>
+
+  <div class="card">
+    <h2>What you owe right now</h2>
+    <div class="alert warning">
+      <strong>Heads up:</strong> Update balances after each statement. Tap any balance to edit. Changes sync to both phones instantly.
+    </div>
+    <div id="debt-balances"></div>
+  </div>
+</section>
+
+<section id="spending" class="section">
+  <div class="card">
+    <h2>This month so far</h2>
+    <p style="font-size: 13px; color: var(--text-2); margin-bottom: 14px;">
+      Track every variable expense. The fixed bills are already accounted for. Both of you can log charges and they'll show up on each other's view in real time.
+    </p>
+    <div class="spending-grid" id="spending-cards"></div>
+  </div>
+
+  <div class="card">
+    <h2>Log a charge</h2>
+    <div class="add-spend">
+      <select id="spend-category">
+        <option value="eating-out">Eating out / delivery</option>
+        <option value="groceries">Groceries</option>
+        <option value="gas">Gas</option>
+        <option value="kid">Kid stuff</option>
+        <option value="impulse">Impulse / Klarna / Shein</option>
+        <option value="gambling">Hard Rock Bet</option>
+        <option value="family">Family help</option>
+        <option value="other">Other</option>
+      </select>
+      <input type="number" id="spend-amount" placeholder="Amount" step="0.01">
+      <input type="text" id="spend-note" placeholder="What was it? (optional)">
+      <button class="btn primary" id="log-btn">Log it</button>
     </div>
   </div>
 
-  <div class="card-panel" id="panel-marc">
-    <div class="bingo-card">
-      <div class="card-header">
-        <div class="card-header-left"><h2>🎯 SALES BINGO</h2><div class="agent-name">Agent: Marc</div></div>
-        <div class="week-badge"><div class="week-label">Duration</div><div class="week-val">1 Week</div></div>
-      </div>
-      <div class="win-banner" id="win-marc"><h3>🎉 BINGO! YOU WIN!</h3><p>Marc crushed it — claim your $100 prize! 💰</p></div>
-      <div class="bingo-grid" id="grid-marc">
-        <div class="bingo-cell" onclick="adminToggle(this,'marc',0)"><span class="cell-icon">🤝</span><span class="cell-text">Sell Broker Support</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'marc',1)"><span class="cell-icon">💰</span><span class="cell-text">Close a Deal Over $600</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'marc',2)"><span class="cell-icon">👑</span><span class="cell-text">Sell a Concierge</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'marc',3)"><span class="cell-icon">⭐</span><span class="cell-text">Get a Google Review</span></div>
-        <div class="bingo-cell free"><span class="cell-icon">🌟</span><span class="cell-text">FREE</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'marc',5)"><span class="cell-icon">📋</span><span class="cell-text">Close an Enhanced Package</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'marc',6)"><span class="cell-icon">🔥</span><span class="cell-text">Close 4 Sales in One Day</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'marc',7)"><span class="cell-icon">🏠</span><span class="cell-text">Get 10 Free Listings in 1 Day</span></div>
-        <div class="bingo-cell" onclick="adminToggle(this,'marc',8)"><span class="cell-icon">📝</span><span class="cell-text">Sell Prepaid Title</span></div>
-      </div>
-      <div class="card-footer">
-        <div class="progress-wrap"><div class="progress-label">Progress</div><div class="progress-bar"><div class="progress-fill" id="prog-marc" style="width:11.1%"></div></div></div>
-        <div class="squares-count" id="count-marc">1 / 9</div>
-        <button class="reset-btn" onclick="resetCard('marc')">Reset</button>
-      </div>
-    </div>
+  <div class="card">
+    <h2>Recent charges</h2>
+    <table class="log-table" id="spend-log">
+      <thead><tr><th>Date</th><th>Category</th><th>Amount</th><th>Note</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+<section id="timeline" class="section">
+  <div class="card">
+    <h2>Your debt-free roadmap</h2>
+    <p style="font-size: 14px; color: var(--text-2); margin-bottom: 16px;">
+      Realistic timeline assuming you hit the spending targets. Quarterly bonus checks (like the $5.5K extra in March) accelerate this if you commit them to debt.
+    </p>
+    <div id="timeline-list"></div>
   </div>
 
-</div>
+  <div class="card">
+    <h2>Big picture levers</h2>
+    <div style="font-size: 14px; line-height: 1.7;">
+      <p style="margin-bottom: 12px;"><strong>1. Mom's VW ($459/mo)</strong> &mdash; if she or another family member can take over even part of this, it's the single biggest move you could make.</p>
+      <p style="margin-bottom: 12px;"><strong>2. Eating out ($1,400 → $400)</strong> &mdash; the bank statements show daily McDonald's and lots of delivery. This alone funds the entire debt payoff plan.</p>
+      <p style="margin-bottom: 12px;"><strong>3. Quarterly bonus checks</strong> &mdash; the $5,500 extra on March 31 is huge. Commit each bonus to Best Egg and you shave 3-4 months off the timeline.</p>
+      <p><strong>4. Q2 sales target</strong> &mdash; if you hit Nico's $980K Q2 goal, your commission share could meaningfully accelerate this.</p>
+    </div>
+  </div>
+</section>
 
-<!-- Leaderboard -->
-<div class="leaderboard">
-  <h3>📊 <span>LEADERBOARD</span></h3>
-  <div id="leaderboard-rows"></div>
-</div>
+<footer>
+  Money Coach &middot; Synced live with Firebase &middot; Last update: <span id="last-saved">just now</span>
+</footer>
 
-<!-- Instructions -->
-<div class="instructions">
-  <h4>📌 How to Play</h4>
-  <ul>
-    <li>Each agent has a unique randomized card with 8 challenges + FREE center</li>
-    <li>Complete a full ROW, COLUMN, or DIAGONAL to win</li>
-    <li>First to BINGO wins the $100 prize</li>
-    <li>Round resets every week — fresh cards, new winners</li>
-    <li>Board updates live for everyone in real time 🔥</li>
-  </ul>
 </div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDYSG3MvPw1Wl3XPOEif5jssttojbE-78w",
-    authDomain: "beycome-bingo.firebaseapp.com",
-    databaseURL: "https://beycome-bingo-default-rtdb.firebaseio.com",
-    projectId: "beycome-bingo",
-    storageBucket: "beycome-bingo.firebasestorage.app",
-    messagingSenderId: "413778705184",
-    appId: "1:413778705184:web:40248e383f6c8a028ab545"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyDYSG3MvPw1Wl3XPOEif5jssttojbE-78w",
+  authDomain: "beycome-bingo.firebaseapp.com",
+  databaseURL: "https://beycome-bingo-default-rtdb.firebaseio.com",
+  projectId: "beycome-bingo",
+  storageBucket: "beycome-bingo.firebasestorage.app",
+  messagingSenderId: "413778705184",
+  appId: "1:413778705184:web:40248e383f6c8a028ab545"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const DB_PATH = 'budget/samkat';
+const PASSWORD = 'Kapri2211';
+const SESSION_KEY = 'samkat-budget-auth';
 
-  const ADMIN_PASSWORD = '9164930';
-  const WIN_PATTERNS = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-  const AGENTS = ['rose','kevin','sharon','marc'];
-  const NAMES = { rose:'Rose', kevin:'Kevin', sharon:'Sharon', marc:'Marc' };
+const initialDebts = [
+  { id: 'carecredit', name: 'CareCredit', balance: 3400, original: 3400, min: 120, apr: 0, priority: 'urgent', notes: '0% promo ends Nov 1 — pay off before then or get backcharged ALL interest.' },
+  { id: 'discover', name: 'Discover', balance: 1695, original: 1695, min: 55, apr: 25.49, priority: 'high', notes: 'Highest APR. Closed account after settlement.' },
+  { id: 'bestegg', name: 'Best Egg Loan', balance: 11200, original: 11200, min: 260, apr: 24.99, priority: 'high', notes: '24.99% APR — same tier as Discover. Big balance, big interest. Attack hard after Discover.' },
+  { id: 'citi', name: 'Citi Bank', balance: 2615, original: 2615, min: 69, apr: 9.9, priority: 'medium', notes: 'Closed. ~$22 of $69 payment is interest, so effective APR is higher than stated.' },
+  { id: 'chase', name: 'Chase CC', balance: 2784, original: 2784, min: 62, apr: 6, priority: 'medium', notes: 'Closed. ~$14 of $62 payment is interest.' },
+];
 
-  let isAdmin = false;
-  let boardState = {};
+const fixedBills = {
+  may: [
+    { name: 'Rent (Cascades — last month)', amount: 2220, due: 1, paycheck: 'second' },
+    { name: 'SBA Loan', amount: 75, due: 1, paycheck: 'second' },
+    { name: 'Lexus (Toyota — Katherine)', amount: 675, due: 1, paycheck: 'second' },
+    { name: 'Xfinity', amount: 15, due: 4, paycheck: 'second' },
+    { name: 'Discover CC (min)', amount: 55, due: 6, paycheck: 'second' },
+    { name: 'CareCredit (min)', amount: 120, due: 7, paycheck: 'second' },
+    { name: 'Chase CC (min)', amount: 62, due: 9, paycheck: 'second' },
+    { name: 'Best Egg', amount: 260, due: 12, paycheck: 'second' },
+    { name: "VW (Mom's car)", amount: 459, due: 13, paycheck: 'first' },
+    { name: 'State Farm', amount: 143, due: 15, paycheck: 'first' },
+    { name: 'Federal student loan', amount: 91, due: 17, paycheck: 'first' },
+    { name: 'Tesla (Santander)', amount: 381, due: 18, paycheck: 'first' },
+    { name: 'Citi Bank (min)', amount: 69, due: 27, paycheck: 'first' },
+    { name: 'Dog food', amount: 120, due: 27, paycheck: 'first' },
+    { name: 'FPL', amount: 150, due: 30, paycheck: 'first' },
+  ],
+  june: [
+    { name: 'Rent (new place)', amount: 2900, due: 1, paycheck: 'second' },
+    { name: 'Lawn', amount: 50, due: 1, paycheck: 'second' },
+    { name: 'SBA Loan', amount: 75, due: 1, paycheck: 'second' },
+    { name: 'Lexus (Toyota)', amount: 675, due: 1, paycheck: 'second' },
+    { name: 'Xfinity', amount: 15, due: 4, paycheck: 'second' },
+    { name: 'Discover CC (min)', amount: 55, due: 6, paycheck: 'second' },
+    { name: 'CareCredit (min)', amount: 120, due: 7, paycheck: 'second' },
+    { name: 'Chase CC (min)', amount: 62, due: 9, paycheck: 'second' },
+    { name: 'Best Egg', amount: 260, due: 12, paycheck: 'second' },
+    { name: 'VW', amount: 459, due: 13, paycheck: 'first' },
+    { name: 'State Farm', amount: 143, due: 15, paycheck: 'first' },
+    { name: 'Federal student loan', amount: 91, due: 17, paycheck: 'first' },
+    { name: 'Tesla (Santander)', amount: 381, due: 18, paycheck: 'first' },
+    { name: 'Citi Bank (min)', amount: 69, due: 27, paycheck: 'first' },
+    { name: 'Dog food', amount: 120, due: 27, paycheck: 'first' },
+    { name: 'FPL', amount: 150, due: 30, paycheck: 'first' },
+  ],
+  july: [
+    { name: 'Rent', amount: 2900, due: 1, paycheck: 'second' },
+    { name: 'Water (quarterly)', amount: 180, due: 1, paycheck: 'second' },
+    { name: 'Lawn', amount: 50, due: 1, paycheck: 'second' },
+    { name: 'SBA Loan', amount: 75, due: 1, paycheck: 'second' },
+    { name: 'Lexus (Toyota)', amount: 675, due: 1, paycheck: 'second' },
+    { name: 'Xfinity', amount: 15, due: 4, paycheck: 'second' },
+    { name: 'CareCredit (min)', amount: 120, due: 7, paycheck: 'second' },
+    { name: 'Chase CC (min)', amount: 62, due: 9, paycheck: 'second' },
+    { name: 'Best Egg', amount: 260, due: 12, paycheck: 'second' },
+    { name: 'VW', amount: 459, due: 13, paycheck: 'first' },
+    { name: 'State Farm', amount: 143, due: 15, paycheck: 'first' },
+    { name: 'Federal student loan', amount: 91, due: 17, paycheck: 'first' },
+    { name: 'Tesla (Santander)', amount: 381, due: 18, paycheck: 'first' },
+    { name: 'Citi Bank (min)', amount: 69, due: 27, paycheck: 'first' },
+    { name: 'Dog food', amount: 120, due: 27, paycheck: 'first' },
+    { name: 'FPL', amount: 150, due: 30, paycheck: 'first' },
+  ],
+};
 
-  function defaultState() {
-    return [false,false,false,false,true,false,false,false,false];
-  }
+const spendingTargets = {
+  'eating-out': 400, 'groceries': 500, 'gas': 350, 'kid': 300,
+  'impulse': 100, 'gambling': 0, 'family': 0, 'other': 200,
+};
+const categoryLabels = {
+  'eating-out': 'Eating out', 'groceries': 'Groceries', 'gas': 'Gas',
+  'kid': 'Kid stuff', 'impulse': 'Impulse / Klarna', 'gambling': 'Gambling',
+  'family': 'Family help', 'other': 'Other',
+};
+const checklistItems = [
+  { id: 'student-balance', text: 'Confirm federal student loan balance (info only, not paying off)' },
+  { id: 'cc-cancel-creditone', text: 'Confirm Credit One is closed (no more $107 charges)' },
+  { id: 'cancel-hellofresh', text: 'Confirm HelloFresh is cancelled' },
+  { id: 'autopay-carecredit', text: 'Set up CareCredit autopay for $567/mo (kills it before Nov)' },
+  { id: 'autopay-bestegg', text: 'Increase Best Egg payment from $260 → $400+ once Discover is gone' },
+  { id: 'mom-vw-talk', text: 'Have the VW conversation with Mom (when ready)' },
+  { id: 'eating-out-cap', text: 'Set May eating out cap: $400 (track daily)' },
+  { id: 'pause-klarna', text: 'Pause new Klarna/Shein purchases until debts are gone' },
+  { id: 'q2-bonus', text: 'Q2 bonus check (~end of June) → 100% to Best Egg' },
+];
+const milestones = [
+  { month: 'Jun 2026', event: '<strong>Discover paid off</strong> &mdash; $1,695 → $0. First win, smallest debt at highest rate.' },
+  { month: 'Oct 2026', event: '<strong>CareCredit paid off</strong> &mdash; $3,400 → $0 before promo expires Nov 1. No interest backcharge.' },
+  { month: 'Jan 2027', event: '<strong>Citi paid off</strong> &mdash; $2,615 → $0. Three down.' },
+  { month: 'Apr 2027', event: '<strong>Chase paid off</strong> &mdash; all credit cards gone. Just Best Egg left.' },
+  { month: 'Jan 2028', event: '<strong>Best Egg paid off</strong> &mdash; $11,200 → $0. 100% consumer debt free.' },
+  { month: 'Apr 2028', event: 'Emergency fund hits $10K. Now building real wealth.' },
+];
 
-  // Listen for real-time Firebase updates
-  const boardRef = ref(db, 'bingo/board');
-  onValue(boardRef, (snapshot) => {
-    const syncDot = document.getElementById('sync-dot');
-    syncDot.className = 'connected';
-    document.getElementById('sync-label').textContent = 'Live';
+let state = {
+  user: 'sam',
+  month: 'may',
+  spendLog: [],
+  debts: JSON.parse(JSON.stringify(initialDebts)),
+  paidBills: {},
+  checklist: {},
+};
+let isInitialized = false;
+const today = new Date('2026-04-28');
 
+function setSyncStatus(status, text) {
+  const el = document.getElementById('sync-status');
+  el.className = 'sync-status ' + status;
+  document.getElementById('sync-text').textContent = text;
+}
+
+function pushToFirebase() {
+  if (!isInitialized) return;
+  setSyncStatus('syncing', 'Syncing...');
+  set(ref(db, DB_PATH), {
+    spendLog: state.spendLog,
+    debts: state.debts,
+    paidBills: state.paidBills,
+    checklist: state.checklist,
+    lastUpdate: Date.now(),
+    lastUser: state.user,
+  }).then(() => {
+    setSyncStatus('', 'Synced');
+    document.getElementById('last-saved').textContent = new Date().toLocaleTimeString();
+  }).catch(err => {
+    console.error('Sync failed', err);
+    setSyncStatus('error', 'Sync error');
+  });
+}
+
+function listenToFirebase() {
+  onValue(ref(db, DB_PATH), (snapshot) => {
     const data = snapshot.val();
     if (data) {
-      // Convert any arrays Firebase may have returned
-      AGENTS.forEach(a => {
-        if (data[a]) {
-          boardState[a] = Array.isArray(data[a]) ? data[a] : Object.values(data[a]);
-        } else {
-          boardState[a] = defaultState();
-        }
-      });
+      state.spendLog = data.spendLog || [];
+      state.debts = data.debts || JSON.parse(JSON.stringify(initialDebts));
+      state.paidBills = data.paidBills || {};
+      state.checklist = data.checklist || {};
+      if (data.lastUpdate) {
+        document.getElementById('last-saved').textContent = new Date(data.lastUpdate).toLocaleTimeString();
+      }
     } else {
-      AGENTS.forEach(a => boardState[a] = defaultState());
-      set(boardRef, boardState);
+      isInitialized = true;
+      pushToFirebase();
+      return;
     }
-    AGENTS.forEach(a => renderCard(a));
-    updateLeaderboard();
-  }, () => {
-    document.getElementById('sync-dot').className = 'error';
-    document.getElementById('sync-label').textContent = 'Offline';
+    isInitialized = true;
+    renderAll();
+    setSyncStatus('', 'Synced');
+  }, (err) => {
+    console.error('Listen failed', err);
+    setSyncStatus('error', 'Connection error');
+  });
+}
+
+function tryLogin() {
+  const input = document.getElementById('pwd-input').value;
+  const errEl = document.getElementById('login-error');
+  if (input === PASSWORD) {
+    sessionStorage.setItem(SESSION_KEY, 'true');
+    showApp();
+  } else {
+    errEl.textContent = 'Wrong password. Try again.';
+    document.getElementById('pwd-input').value = '';
+  }
+}
+
+document.getElementById('login-btn').addEventListener('click', tryLogin);
+document.getElementById('pwd-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') tryLogin();
+});
+
+function showApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  const savedUser = localStorage.getItem('samkat-user') || 'sam';
+  state.user = savedUser;
+  document.querySelectorAll('.user-pill').forEach(p => p.classList.toggle('active', p.dataset.user === savedUser));
+  renderToday();
+  listenToFirebase();
+}
+
+if (sessionStorage.getItem(SESSION_KEY) === 'true') {
+  showApp();
+}
+
+function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+function fmtCents(n) { return '$' + n.toFixed(2); }
+
+document.querySelectorAll('.user-pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const u = btn.dataset.user;
+    state.user = u;
+    localStorage.setItem('samkat-user', u);
+    document.querySelectorAll('.user-pill').forEach(p => p.classList.toggle('active', p.dataset.user === u));
+    renderCoachMessage();
+  });
+});
+
+document.querySelectorAll('.month-pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const m = btn.dataset.month;
+    state.month = m;
+    document.querySelectorAll('.month-pill').forEach(p => p.classList.toggle('active', p.dataset.month === m));
+    renderPaychecks();
+    renderTotals();
+  });
+});
+
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const id = btn.dataset.tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === id));
+    document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === id));
+    if (id === 'paychecks') renderPaychecks();
+    if (id === 'debt') renderDebt();
+    if (id === 'spending') renderSpending();
+    if (id === 'timeline') renderTimeline();
+  });
+});
+
+document.getElementById('log-btn').addEventListener('click', logSpend);
+
+function renderCoachMessage() {
+  const name = state.user === 'sam' ? 'Sam' : 'Katherine';
+  const monthLog = state.spendLog.filter(s => new Date(s.date).getMonth() === today.getMonth());
+  const totalEatingOut = monthLog
+    .filter(s => s.category === 'eating-out')
+    .reduce((sum, s) => sum + s.amount, 0);
+
+  let msg = '';
+  if (totalEatingOut > 400) {
+    msg = `Hey ${name} &mdash; eating out is at <strong>${fmt(totalEatingOut)}</strong> this month, over the $400 target. No shame, just a heads up &mdash; one home-cooked dinner instead of delivery saves about $40.`;
+  } else if (monthLog.length === 0) {
+    msg = `Welcome back, ${name}! May is your power month &mdash; lower rent gives you an extra $680 to throw at debt. Discover is the closest finish line ($1,695). Let's go.`;
+  } else if (totalEatingOut > 300) {
+    msg = `Looking good, ${name}. Eating out is at ${fmt(totalEatingOut)} of $400 budget &mdash; you're close to the cap, so let's pump the brakes for the rest of the month.`;
+  } else {
+    msg = `Looking good, ${name}. You're tracking spending, which is 80% of the battle. Eating out: ${fmt(totalEatingOut)} of $400. Keep it up.`;
+  }
+  document.getElementById('coach-message').innerHTML = msg;
+}
+
+function renderToday() {
+  document.getElementById('today-date').textContent = today.toLocaleDateString('en-US', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+}
+
+function renderCareCreditCountdown() {
+  const promo = new Date('2026-11-01');
+  const days = Math.floor((promo - today) / (1000 * 60 * 60 * 24));
+  const el = document.getElementById('carecredit-countdown');
+  el.textContent = `${days} days until promo expires`;
+  if (days < 90) el.classList.add('urgent');
+
+  const cc = state.debts.find(d => d.id === 'carecredit');
+  if (cc) {
+    const paid = cc.original - cc.balance;
+    const pct = (paid / cc.original) * 100;
+    document.getElementById('carecredit-bar').style.width = pct + '%';
+    document.getElementById('carecredit-paid').textContent = Math.round(paid).toLocaleString();
+    document.getElementById('carecredit-remaining').textContent = Math.round(cc.balance).toLocaleString();
+  }
+}
+
+function renderChecklist() {
+  const html = checklistItems.map(item => {
+    const checked = state.checklist[item.id];
+    return `
+      <label style="display: flex; gap: 10px; align-items: center; padding: 8px 0; cursor: pointer; font-size: 14px;">
+        <input type="checkbox" ${checked ? 'checked' : ''} data-check-id="${item.id}" style="width: 16px; height: 16px; accent-color: var(--accent);">
+        <span style="${checked ? 'text-decoration: line-through; color: var(--text-3);' : ''}">${item.text}</span>
+      </label>
+    `;
+  }).join('');
+  document.getElementById('checklist').innerHTML = html;
+  document.querySelectorAll('[data-check-id]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      state.checklist[cb.dataset.checkId] = cb.checked;
+      renderChecklist();
+      pushToFirebase();
+    });
+  });
+}
+
+function renderTotals() {
+  const totalDebt = state.debts.reduce((s, d) => s + d.balance, 0);
+  document.getElementById('total-debt').textContent = fmt(totalDebt);
+  const fixedTotal = fixedBills[state.month].reduce((s, b) => s + b.amount, 0);
+  document.getElementById('fixed-total').textContent = fmt(fixedTotal);
+  const mayFree = 9909 - fixedBills.may.reduce((s, b) => s + b.amount, 0);
+  document.getElementById('may-free').textContent = fmt(mayFree);
+}
+
+function renderPaychecks() {
+  const bills = fixedBills[state.month];
+  const first = bills.filter(b => b.paycheck === 'first');
+  const second = bills.filter(b => b.paycheck === 'second');
+
+  const renderPaycheck = (name, amount, billList, pcId) => {
+    const billsTotal = billList.reduce((s, b) => s + b.amount, 0);
+    const remaining = amount - billsTotal;
+    const billsHtml = billList.map((b, i) => {
+      const dueText = b.due ? `Due ${b.due}` : '';
+      const key = `${state.month}-${pcId}-${i}`;
+      const paid = state.paidBills[key];
+      return `
+        <div class="bill-row">
+          <div>
+            <div>${b.name}</div>
+            <div class="bill-due">${dueText}</div>
+          </div>
+          <div class="bill-amount">${fmt(b.amount)}</div>
+          <input type="checkbox" class="checkbox" ${paid ? 'checked' : ''} data-paid-key="${key}">
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="card">
+        <div class="paycheck-header">
+          <div>
+            <div class="paycheck-name">${name}</div>
+            <div class="paycheck-amount">${fmt(amount)}</div>
+          </div>
+          <div style="text-align: right;">
+            <div class="paycheck-name">After bills</div>
+            <div class="paycheck-amount" style="color: ${remaining > 0 ? 'var(--success)' : 'var(--danger)'};">${fmt(remaining)}</div>
+          </div>
+        </div>
+        ${billsHtml}
+        <div class="paycheck-footer">
+          <span>Bills total</span>
+          <span>${fmt(billsTotal)}</span>
+        </div>
+      </div>
+    `;
+  };
+
+  const html = renderPaycheck('Paycheck #1 — 15th', 4954, first, 'first') +
+               renderPaycheck('Paycheck #2 — 31st', 4954, second, 'second');
+  document.getElementById('paycheck-grid').innerHTML = html;
+
+  document.querySelectorAll('[data-paid-key]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      state.paidBills[cb.dataset.paidKey] = cb.checked;
+      pushToFirebase();
+    });
   });
 
-  function saveToFirebase() {
-    set(boardRef, boardState);
-  }
-
-  // Admin functions — exposed to window for onclick handlers
-  window.toggleAdmin = () => {
-    if (isAdmin) { lockAdmin(); }
-    else {
-      document.getElementById('pw-modal').classList.add('show');
-      setTimeout(() => document.getElementById('pw-input').focus(), 100);
-    }
+  const monthNotes = {
+    may: 'Last month at Cascades ($2,220 rent). Use the extra room to attack Discover.',
+    june: 'New place ($2,900 rent). Tighter month — focus on CareCredit minimums + emergency fund.',
+    july: 'Discover should be paid off this month. Reroute that $55 to CareCredit.',
   };
+  const note = document.getElementById('month-note');
+  note.textContent = monthNotes[state.month];
+  note.className = 'alert ' + (state.month === 'may' || state.month === 'july' ? 'success' : 'warning');
+}
 
-  window.checkPassword = () => {
-    const val = document.getElementById('pw-input').value;
-    const input = document.getElementById('pw-input');
-    const err = document.getElementById('pw-error');
-    if (val === ADMIN_PASSWORD) {
-      isAdmin = true;
-      document.getElementById('pw-modal').classList.remove('show');
-      input.value = ''; err.textContent = ''; input.classList.remove('error');
-      document.getElementById('admin-toggle').textContent = '🔓';
-      document.getElementById('admin-toggle').classList.add('active');
-      document.getElementById('admin-banner').classList.add('show');
-      document.body.classList.add('admin-mode');
-    } else {
-      input.classList.add('error');
-      err.textContent = 'Incorrect password. Try again.';
-      setTimeout(() => input.classList.remove('error'), 400);
-    }
-  };
+function renderDebt() {
+  const order = ['carecredit', 'discover', 'bestegg', 'citi', 'chase'];
+  const html = order.map((id, i) => {
+    const d = state.debts.find(x => x.id === id);
+    if (!d) return '';
+    const paid = d.original - d.balance;
+    const pct = d.original > 0 ? (paid / d.original) * 100 : 0;
+    const aprText = d.apr === 0 ? `0% promo` : `${d.apr}% APR`;
+    return `
+      <div class="debt-row">
+        <div>
+          <div>
+            <span class="debt-name">${i + 1}. ${d.name}</span>
+            <span class="priority-tag ${d.priority}">${d.priority}</span>
+          </div>
+          <div class="debt-meta">${aprText} · Min ${fmt(d.min)}/mo · ${d.notes}</div>
+        </div>
+        <div style="text-align: right; font-weight: 500; font-size: 16px;">${fmt(d.balance)}</div>
+        <div class="debt-meta" style="text-align: right;">of ${fmt(d.original)}</div>
+        <div class="debt-bar-container">
+          <div class="debt-bar ${d.priority}" style="width: ${pct}%;"></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('debt-list').innerHTML = html;
 
-  function lockAdmin() {
-    isAdmin = false;
-    document.getElementById('admin-toggle').textContent = '🔒';
-    document.getElementById('admin-toggle').classList.remove('active');
-    document.getElementById('admin-banner').classList.remove('show');
-    document.body.classList.remove('admin-mode');
-  }
+  const balHtml = state.debts.map(d => `
+    <div class="debt-row">
+      <div>
+        <div class="debt-name">${d.name}</div>
+        <div class="debt-meta">${d.apr}% APR</div>
+      </div>
+      <div>
+        Balance: <input type="number" value="${d.balance}" step="0.01" data-debt-id="${d.id}" style="width: 110px;">
+      </div>
+      <div></div>
+    </div>
+  `).join('');
+  document.getElementById('debt-balances').innerHTML = balHtml;
 
-  window.closeModal = () => {
-    document.getElementById('pw-modal').classList.remove('show');
-    document.getElementById('pw-input').value = '';
-    document.getElementById('pw-error').textContent = '';
-  };
-
-  document.getElementById('pw-modal').addEventListener('click', e => { if (e.target === e.currentTarget) window.closeModal(); });
-
-  window.adminToggle = (cell, agent, idx) => {
-    if (!isAdmin || idx === 4) return;
-    if (!boardState[agent]) boardState[agent] = defaultState();
-    boardState[agent][idx] = !boardState[agent][idx];
-    saveToFirebase(); // Instant sync to all viewers
-  };
-
-  window.resetCard = (agent) => {
-    if (!isAdmin) return;
-    if (!confirm(`Reset ${NAMES[agent]}'s card? This cannot be undone.`)) return;
-    boardState[agent] = defaultState();
-    saveToFirebase();
-  };
-
-  window.switchAgent = (e, agent) => {
-    document.querySelectorAll('.card-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('panel-' + agent).classList.add('active');
-    e.target.classList.add('active');
-  };
-
-  function renderCard(agent) {
-    if (!boardState[agent]) return;
-    const grid = document.getElementById('grid-' + agent);
-    const cells = [...grid.querySelectorAll('.bingo-cell')];
-    const s = boardState[agent];
-
-    cells.forEach((c, i) => {
-      if (i === 4) return;
-      c.classList.toggle('checked', !!s[i]);
-      c.classList.remove('winner');
-    });
-
-    let won = false;
-    for (const pattern of WIN_PATTERNS) {
-      if (pattern.every(i => s[i])) {
-        pattern.forEach(i => cells[i].classList.add('winner'));
-        won = true;
+  document.querySelectorAll('[data-debt-id]').forEach(input => {
+    input.addEventListener('change', () => {
+      const d = state.debts.find(x => x.id === input.dataset.debtId);
+      if (d) {
+        d.balance = parseFloat(input.value) || 0;
+        pushToFirebase();
+        renderDebt();
+        renderTotals();
+        renderCareCreditCountdown();
+        renderCoachMessage();
       }
-    }
-    document.getElementById('win-' + agent).classList.toggle('show', won);
+    });
+  });
+}
 
-    const completed = s.filter(Boolean).length;
-    document.getElementById('prog-' + agent).style.width = ((completed / 9) * 100) + '%';
-    document.getElementById('count-' + agent).textContent = completed + ' / 9';
+function renderSpending() {
+  const monthLog = state.spendLog.filter(s => new Date(s.date).getMonth() === today.getMonth());
+  const byCat = {};
+  Object.keys(spendingTargets).forEach(c => byCat[c] = 0);
+  monthLog.forEach(s => { byCat[s.category] = (byCat[s.category] || 0) + s.amount; });
+
+  const html = Object.keys(spendingTargets).map(cat => {
+    const spent = byCat[cat];
+    const target = spendingTargets[cat];
+    const pct = target > 0 ? Math.min(100, (spent / target) * 100) : (spent > 0 ? 100 : 0);
+    const cls = spent > target ? 'over' : (spent > target * 0.8 ? 'close' : '');
+    return `
+      <div class="spend-card">
+        <div class="spend-label">${categoryLabels[cat]}</div>
+        <div class="spend-current">${fmt(spent)}</div>
+        <div class="spend-target">of ${fmt(target)} ${target === 0 ? '(target: zero)' : 'target'}</div>
+        <div class="spend-progress"><div class="spend-progress-bar ${cls}" style="width: ${pct}%;"></div></div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('spending-cards').innerHTML = html;
+
+  const recent = state.spendLog.slice().reverse().slice(0, 30);
+  const logHtml = recent.map((s, idx) => {
+    const userTag = s.user ? `<span class="user-tag ${s.user}">${s.user}</span>` : '';
+    const realIdx = state.spendLog.length - 1 - idx;
+    return `
+      <tr>
+        <td>${new Date(s.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</td>
+        <td>${categoryLabels[s.category] || s.category} ${userTag}</td>
+        <td style="font-variant-numeric: tabular-nums;">${fmtCents(s.amount)}</td>
+        <td style="color: var(--text-3); font-size: 12px;">${s.note || ''}</td>
+        <td><button class="delete" data-del-idx="${realIdx}">×</button></td>
+      </tr>
+    `;
+  }).join('');
+  const tbody = document.querySelector('#spend-log tbody');
+  if (tbody) tbody.innerHTML = logHtml || '<tr><td colspan="5" style="text-align: center; color: var(--text-3); padding: 20px;">No charges logged yet</td></tr>';
+
+  document.querySelectorAll('[data-del-idx]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.spendLog.splice(parseInt(btn.dataset.delIdx), 1);
+      pushToFirebase();
+      renderSpending();
+      renderCoachMessage();
+    });
+  });
+}
+
+function logSpend() {
+  const cat = document.getElementById('spend-category').value;
+  const amt = parseFloat(document.getElementById('spend-amount').value);
+  const note = document.getElementById('spend-note').value;
+  if (!amt || amt <= 0) return;
+  state.spendLog.push({
+    date: new Date().toISOString(),
+    category: cat,
+    amount: amt,
+    note: note,
+    user: state.user,
+  });
+  document.getElementById('spend-amount').value = '';
+  document.getElementById('spend-note').value = '';
+  pushToFirebase();
+  renderSpending();
+  renderCoachMessage();
+}
+
+function renderTimeline() {
+  const html = milestones.map(m => `
+    <div class="timeline-item">
+      <div class="timeline-month">${m.month}</div>
+      <div class="timeline-event">${m.event}</div>
+    </div>
+  `).join('');
+  document.getElementById('timeline-list').innerHTML = html;
+}
+
+function renderAll() {
+  renderCoachMessage();
+  renderTotals();
+  renderCareCreditCountdown();
+  renderChecklist();
+  renderPaychecks();
+  const activeSection = document.querySelector('.section.active');
+  if (activeSection) {
+    if (activeSection.id === 'debt') renderDebt();
+    if (activeSection.id === 'spending') renderSpending();
+    if (activeSection.id === 'timeline') renderTimeline();
   }
-
-  function updateLeaderboard() {
-    const rankEmojis = ['🥇','🥈','🥉','4'];
-    const rankClasses = ['gold','silver','bronze',''];
-
-    const sorted = AGENTS.map(a => {
-      const s = boardState[a] || defaultState();
-      let bingos = 0;
-      for (const p of WIN_PATTERNS) { if (p.every(i => s[i])) bingos++; }
-      return { name: NAMES[a], squares: s.filter(Boolean).length, bingos };
-    }).sort((a,b) => b.bingos - a.bingos || b.squares - a.squares);
-
-    document.getElementById('leaderboard-rows').innerHTML = sorted.map((a, i) => `
-      <div class="lb-row">
-        <div class="lb-rank ${rankClasses[i]}">${rankEmojis[i]}</div>
-        <div class="lb-agent">${a.name}</div>
-        <div class="lb-squares">${a.squares}/9 squares</div>
-        <div class="lb-wins ${a.bingos===0?'zero':''}">${a.bingos>0?`🏆 ${a.bingos} BINGO${a.bingos>1?'s':''}`:'No wins yet'}</div>
-      </div>`).join('');
-  }
+}
 </script>
 </body>
 </html>
