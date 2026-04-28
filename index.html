@@ -252,10 +252,35 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <h1>Budget</h1>
     <p>Sam &amp; Katherine — enter password</p>
     <input type="password" id="pwd-input" placeholder="Password" autocomplete="off">
-    <button id="login-btn">Unlock →</button>
+    <button id="login-btn" onclick="tryLogin()">Unlock →</button>
     <div class="login-error" id="login-error"></div>
   </div>
 </div>
+
+<script>
+function tryLogin() {
+  var val = document.getElementById('pwd-input').value;
+  if (val === 'Kapri2211') {
+    sessionStorage.setItem('sk-auth', '1');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    if (window.bootApp) window.bootApp();
+    else window._pendingBoot = true;
+  } else {
+    document.getElementById('login-error').textContent = 'Wrong password. Try again.';
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-input').focus();
+  }
+}
+document.getElementById('pwd-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') tryLogin();
+});
+if (sessionStorage.getItem('sk-auth') === '1') {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  window._pendingBoot = true;
+}
+</script>
 
 <!-- ─── App ───────────────────────────────────────────────── -->
 <div class="app" id="app" style="display:none">
@@ -684,27 +709,14 @@ function listen(){
   },()=>setSync('error','Connection error'));
 }
 
-// ── Login ──────────────────────────────────────────────────────────────────
+// ── Boot (called after login) ──────────────────────────────────────────────
 
-function tryLogin(){
-  if(document.getElementById('pwd-input').value===PASSWORD){
-    sessionStorage.setItem('sk-auth','1');
-    bootApp();
-  } else {
-    document.getElementById('login-error').textContent='Wrong password.';
-    document.getElementById('pwd-input').value='';
-  }
-}
-document.getElementById('login-btn').addEventListener('click',tryLogin);
-document.getElementById('pwd-input').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
-function bootApp(){
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('app').style.display='flex';
+window.bootApp = function(){
   S.user=localStorage.getItem('sk-user')||'sam';
   updateAvatars();
   listen();
-}
-if(sessionStorage.getItem('sk-auth')) bootApp();
+};
+if(window._pendingBoot) window.bootApp();
 
 // ── User avatars ───────────────────────────────────────────────────────────
 
