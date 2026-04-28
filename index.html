@@ -705,19 +705,31 @@ function listen(){
     setSync('error','No sync');
     return;
   }
-  db.ref(DB_PATH).on('value',snap=>{
-    const d=snap.val();
+  // Safety net — render after 4 seconds even if Firebase never responds
+  var fbTimer = setTimeout(function(){
+    if(!ready){ ready=true; renderAll(); setSync('error','Sync timeout'); }
+  }, 4000);
+
+  db.ref(DB_PATH).on('value', function(snap){
+    clearTimeout(fbTimer);
+    var d = snap.val();
     if(d){
       S.spendLog  = d.spendLog  || [];
       S.debts     = d.debts     || JSON.parse(JSON.stringify(DEBTS0));
       S.paidBills = d.paidBills || {};
       S.checklist = d.checklist || {};
     }
-    ready=true;
+    ready = true;
     if(!d) push();
     renderAll();
     setSync('','Synced ✓');
-  },()=>setSync('error','Connection error'));
+  }, function(err){
+    clearTimeout(fbTimer);
+    console.warn('Firebase error:', err);
+    ready = true;
+    renderAll();
+    setSync('error','Sync error');
+  });
 }
 
 // ── Boot (called after login) ──────────────────────────────────────────────
