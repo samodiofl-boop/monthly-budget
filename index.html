@@ -18,7 +18,7 @@
   --text-2: #5F5E5A;
   --text-3: #9A9892;
   --border: rgba(0,0,0,0.06);
-  --border-2: rgba(0,0,0,0.10);
+  --border-2: rgba(0,0,0,0.12);
   --mint: #4FCAA0;
   --mint-soft: #E1F5EE;
   --rose: #F4A4B8;
@@ -46,6 +46,7 @@ body {
 .menu-icon span { height: 2px; background: var(--text); border-radius: 1px; width: 100%; }
 .brand { display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
 .brand-icon { width: 26px; height: 26px; background: var(--coral); border-radius: 7px; display: flex; align-items: center; justify-content: center; color: white; font-size: 13px; font-weight: 700; }
+.topnav-right { display: flex; align-items: center; gap: 12px; }
 .live-indicator {
   display: flex; align-items: center; gap: 6px;
   background: var(--mint-soft); color: #0F6E56;
@@ -54,6 +55,28 @@ body {
 }
 .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mint); animation: pulse 2s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(0.85); } }
+
+.admin-btn {
+  background: var(--surface);
+  border: 0.5px solid var(--border-2);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-2);
+}
+.admin-btn:hover { background: var(--bg); color: var(--text); }
+.admin-btn.active {
+  background: var(--text);
+  color: white;
+  border-color: var(--text);
+}
+.admin-btn .lock-icon { font-size: 11px; }
+
 .main { max-width: 1400px; margin: 0 auto; padding: 32px 40px 80px; }
 .page-header { margin-bottom: 28px; }
 .page-title { font-size: 28px; font-weight: 700; letter-spacing: -0.01em; display: flex; align-items: center; gap: 12px; }
@@ -143,12 +166,163 @@ body {
 .pool-amount { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
 .pool-label { font-size: 12px; color: var(--text-2); margin-top: 4px; }
 .pool-detail { font-size: 11px; color: var(--text-3); margin-top: 6px; }
-.admin-link { font-size: 11px; color: var(--text-3); text-decoration: none; padding: 4px 8px; border-radius: 6px; }
-.admin-link:hover { color: var(--text-2); background: var(--bg); }
+
+/* ===== ADMIN PANEL (slides in when unlocked) ===== */
+.admin-panel {
+  background: var(--surface);
+  border: 0.5px solid var(--coral);
+  border-radius: var(--radius);
+  padding: 22px 26px;
+  margin-bottom: 20px;
+  position: relative;
+}
+.admin-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 0.5px solid var(--border);
+}
+.admin-panel-title-block {
+  display: flex; align-items: center; gap: 10px;
+}
+.admin-panel-tag {
+  background: var(--coral-soft);
+  color: #B5562A;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.admin-actions { display: flex; align-items: center; gap: 10px; }
+.save-status {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 500;
+  background: var(--mint-soft); color: #0F6E56;
+}
+.save-status.saving { background: var(--amber-soft); color: #854F0B; }
+.save-status.error { background: var(--rose-soft); color: #993556; }
+.lock-btn, .reset-btn {
+  background: none;
+  border: 0.5px solid var(--border-2);
+  color: var(--text-2);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.lock-btn:hover { background: var(--bg); color: var(--text); }
+.reset-btn:hover { background: var(--rose-soft); color: #993556; border-color: rgba(153, 53, 86, 0.3); }
+
+.admin-rep-row {
+  display: grid;
+  grid-template-columns: minmax(160px, 1.5fr) repeat(5, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 0.5px solid var(--border);
+}
+.admin-rep-row:last-child { border-bottom: none; }
+.admin-rep-cell { display: flex; align-items: center; gap: 10px; }
+.admin-rep-name { font-weight: 500; font-size: 14px; }
+.admin-input {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 0.5px solid var(--border-2);
+  border-radius: 6px;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
+  background: var(--surface);
+  text-align: right;
+}
+.admin-input:focus { outline: 2px solid var(--coral); outline-offset: -1px; }
+.admin-headers {
+  display: grid;
+  grid-template-columns: minmax(160px, 1.5fr) repeat(5, 1fr);
+  gap: 10px;
+  padding: 4px 0 8px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+  font-weight: 500;
+  text-align: right;
+}
+.admin-headers .first-col { text-align: left; }
+
+/* ===== PASSWORD MODAL ===== */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+.modal-box {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 32px 36px;
+  max-width: 360px;
+  width: calc(100% - 40px);
+  text-align: center;
+  border: 0.5px solid var(--border);
+}
+.modal-icon {
+  width: 44px; height: 44px;
+  background: var(--coral);
+  border-radius: 12px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+}
+.modal-title { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 4px; }
+.modal-subtitle { font-size: 13px; color: var(--text-2); margin-bottom: 20px; }
+.modal-input {
+  width: 100%;
+  padding: 11px 14px;
+  font-size: 14px;
+  border: 0.5px solid var(--border-2);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-family: inherit;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+.modal-input:focus { outline: 2px solid var(--coral); outline-offset: -1px; }
+.modal-actions { display: flex; gap: 8px; }
+.modal-btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  border: 0.5px solid var(--border-2);
+  background: var(--surface);
+  color: var(--text);
+}
+.modal-btn.primary { background: var(--text); color: white; border-color: var(--text); }
+.modal-btn.primary:hover { opacity: 0.85; }
+.modal-btn:hover { background: var(--bg); }
+.modal-error { color: #993556; font-size: 12px; margin-top: 10px; min-height: 16px; }
+
 @media (max-width: 1100px) {
   .hero-row { grid-template-columns: repeat(2, 1fr); }
   .crowns-row { grid-template-columns: 1fr; }
   .mvp-pace { grid-template-columns: 1fr; }
+  .admin-rep-row, .admin-headers { grid-template-columns: 1fr; gap: 6px; }
+  .admin-headers { display: none; }
+  .admin-input { text-align: left; }
 }
 @media (max-width: 700px) {
   .main { padding: 20px 16px 60px; }
@@ -170,11 +344,15 @@ body {
       beycome
     </div>
   </div>
-  <div class="topnav-right" style="display: flex; align-items: center; gap: 14px;">
+  <div class="topnav-right">
     <div class="live-indicator">
       <span class="live-dot"></span>
       <span>Live</span>
     </div>
+    <button class="admin-btn" id="admin-btn">
+      <span class="lock-icon">🔒</span>
+      <span id="admin-btn-text">Admin</span>
+    </button>
   </div>
 </header>
 
@@ -187,6 +365,34 @@ body {
     <p class="page-subtitle" id="subtitle">Loading...</p>
   </div>
 
+  <!-- ADMIN PANEL (hidden by default) -->
+  <div class="admin-panel" id="admin-panel" style="display: none;">
+    <div class="admin-panel-header">
+      <div class="admin-panel-title-block">
+        <span class="admin-panel-tag">Admin Mode</span>
+        <span style="font-size: 14px; color: var(--text-2);">Update MTD totals — saves automatically</span>
+      </div>
+      <div class="admin-actions">
+        <span class="save-status" id="save-status">
+          <span>✓</span>
+          <span id="save-text">Saved</span>
+        </span>
+        <button class="reset-btn" id="reset-btn">Reset all</button>
+        <button class="lock-btn" id="lock-btn">Lock</button>
+      </div>
+    </div>
+    <div class="admin-headers">
+      <span class="first-col">Rep</span>
+      <span>Total deals</span>
+      <span>Revenue $</span>
+      <span>FL+TX deals</span>
+      <span>Titles sold</span>
+      <span>Concierge</span>
+    </div>
+    <div id="admin-rows"></div>
+  </div>
+
+  <!-- HERO STATS -->
   <div class="hero-row">
     <div class="card stat-card">
       <div class="stat-label"><span class="stat-dot coral"></span>Team Revenue</div>
@@ -327,15 +533,26 @@ body {
       </div>
     </div>
   </div>
-
-  <div style="text-align: center; margin-top: 24px;">
-    <a href="admin.html" class="admin-link">Admin</a>
-  </div>
 </main>
+
+<!-- PASSWORD MODAL -->
+<div class="modal-overlay" id="modal-overlay" style="display: none;">
+  <div class="modal-box">
+    <div class="modal-icon">🔒</div>
+    <div class="modal-title">Admin Access</div>
+    <div class="modal-subtitle">Enter password to unlock edit mode</div>
+    <input type="password" class="modal-input" id="modal-pwd" placeholder="Password" autocomplete="off">
+    <div class="modal-actions">
+      <button class="modal-btn" id="modal-cancel">Cancel</button>
+      <button class="modal-btn primary" id="modal-unlock">Unlock</button>
+    </div>
+    <div class="modal-error" id="modal-error"></div>
+  </div>
+</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDYSG3MvPw1Wl3XPOEif5jssttojbE-78w",
@@ -350,6 +567,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+const PASSWORD = 'Kapri2211';
+const SESSION_KEY = 'mayhem-admin-unlocked';
+
 const REPS = [
   { id: 'rose',   name: 'Rose Rapsing',     initials: 'RR', color: 'coral' },
   { id: 'kevin',  name: 'Kevin Gutierrez',  initials: 'KG', color: 'indigo' },
@@ -357,11 +577,13 @@ const REPS = [
   { id: 'marc',   name: 'Marc Jayrold',     initials: 'MJ', color: 'purple' },
 ];
 
-function defaultData() {
-  const data = {};
-  REPS.forEach(r => { data[r.id] = { deals: 0, revenue: 0, flTxDeals: 0, titles: 0, concierge: 0 }; });
-  return data;
-}
+const FIELDS = ['deals', 'revenue', 'flTxDeals', 'titles', 'concierge'];
+
+let currentData = {};
+REPS.forEach(r => { currentData[r.id] = { deals: 0, revenue: 0, flTxDeals: 0, titles: 0, concierge: 0 }; });
+
+let saveTimeout = null;
+let isAdminMode = false;
 
 function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
 function pct(n) { return Math.round(n) + '%'; }
@@ -390,11 +612,126 @@ function daysLeftInMay() {
   return Math.max(0, Math.ceil((end - today) / (1000 * 60 * 60 * 24)));
 }
 
+// ===== ADMIN MODE =====
+function showAdminModal() {
+  document.getElementById('modal-overlay').style.display = 'flex';
+  document.getElementById('modal-pwd').focus();
+  document.getElementById('modal-error').textContent = '';
+  document.getElementById('modal-pwd').value = '';
+}
+function hideAdminModal() {
+  document.getElementById('modal-overlay').style.display = 'none';
+}
+function tryUnlock() {
+  const input = document.getElementById('modal-pwd').value;
+  if (input === PASSWORD) {
+    sessionStorage.setItem(SESSION_KEY, 'true');
+    enterAdminMode();
+    hideAdminModal();
+  } else {
+    document.getElementById('modal-error').textContent = 'Wrong password.';
+    document.getElementById('modal-pwd').value = '';
+    document.getElementById('modal-pwd').focus();
+  }
+}
+function enterAdminMode() {
+  isAdminMode = true;
+  document.getElementById('admin-panel').style.display = 'block';
+  const btn = document.getElementById('admin-btn');
+  btn.classList.add('active');
+  document.getElementById('admin-btn-text').textContent = 'Admin Mode';
+  renderAdminRows();
+}
+function exitAdminMode() {
+  isAdminMode = false;
+  sessionStorage.removeItem(SESSION_KEY);
+  document.getElementById('admin-panel').style.display = 'none';
+  const btn = document.getElementById('admin-btn');
+  btn.classList.remove('active');
+  document.getElementById('admin-btn-text').textContent = 'Admin';
+}
+
+document.getElementById('admin-btn').addEventListener('click', () => {
+  if (isAdminMode) {
+    exitAdminMode();
+  } else {
+    showAdminModal();
+  }
+});
+document.getElementById('modal-unlock').addEventListener('click', tryUnlock);
+document.getElementById('modal-cancel').addEventListener('click', hideAdminModal);
+document.getElementById('modal-pwd').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') tryUnlock();
+  if (e.key === 'Escape') hideAdminModal();
+});
+document.getElementById('lock-btn').addEventListener('click', exitAdminMode);
+
+// Restore admin mode if previously unlocked
+if (sessionStorage.getItem(SESSION_KEY) === 'true') {
+  enterAdminMode();
+}
+
+function renderAdminRows() {
+  const container = document.getElementById('admin-rows');
+  container.innerHTML = REPS.map(r => `
+    <div class="admin-rep-row">
+      <div class="admin-rep-cell">
+        <div class="avatar ${r.color}" style="width: 32px; height: 32px; font-size: 11px;">${r.initials}</div>
+        <span class="admin-rep-name">${r.name}</span>
+      </div>
+      ${FIELDS.map(f => `
+        <input type="number" class="admin-input" data-rep="${r.id}" data-field="${f}" min="0" step="${f === 'revenue' ? '0.01' : '1'}" value="${currentData[r.id][f] || 0}" placeholder="0">
+      `).join('')}
+    </div>
+  `).join('');
+
+  document.querySelectorAll('.admin-input').forEach(input => {
+    input.addEventListener('input', () => {
+      const rep = input.dataset.rep;
+      const field = input.dataset.field;
+      const value = parseFloat(input.value) || 0;
+      currentData[rep][field] = value;
+
+      setSaveStatus('saving', 'Saving...');
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => saveToFirebase(), 500);
+    });
+  });
+}
+
+function setSaveStatus(state, text) {
+  const el = document.getElementById('save-status');
+  el.className = 'save-status ' + state;
+  document.getElementById('save-text').textContent = text;
+}
+
+function saveToFirebase() {
+  set(ref(db, 'may-mayhem/reps'), currentData)
+    .then(() => setSaveStatus('', 'Saved ✓'))
+    .catch(err => {
+      console.error('Save failed', err);
+      setSaveStatus('error', 'Save error');
+    });
+}
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  if (!confirm('Reset all rep numbers to zero? This cannot be undone.')) return;
+  REPS.forEach(r => {
+    currentData[r.id] = { deals: 0, revenue: 0, flTxDeals: 0, titles: 0, concierge: 0 };
+  });
+  renderAdminRows();
+  saveToFirebase();
+});
+
+// ===== RENDER PUBLIC DASHBOARD =====
 function render(data) {
-  if (!data) data = defaultData();
+  if (!data) data = {};
+  REPS.forEach(r => {
+    if (!data[r.id]) data[r.id] = { deals: 0, revenue: 0, flTxDeals: 0, titles: 0, concierge: 0 };
+  });
 
   const repStats = REPS.map(r => {
-    const d = data[r.id] || { deals: 0, revenue: 0, flTxDeals: 0, titles: 0, concierge: 0 };
+    const d = data[r.id];
     return {
       ...r,
       deals: d.deals || 0,
@@ -553,13 +890,37 @@ function renderLeaderboard(repStats) {
   `).join('');
 }
 
+// Listen to Firebase
 const dataRef = ref(db, 'may-mayhem/reps');
 onValue(dataRef, (snapshot) => {
-  const data = snapshot.val() || defaultData();
+  const data = snapshot.val() || {};
+  REPS.forEach(r => {
+    if (data[r.id]) {
+      currentData[r.id] = {
+        deals: data[r.id].deals || 0,
+        revenue: data[r.id].revenue || 0,
+        flTxDeals: data[r.id].flTxDeals || 0,
+        titles: data[r.id].titles || 0,
+        concierge: data[r.id].concierge || 0,
+      };
+    }
+  });
   render(data);
+
+  // Update admin inputs if open and not actively focused
+  if (isAdminMode) {
+    document.querySelectorAll('.admin-input').forEach(input => {
+      if (document.activeElement !== input) {
+        const rep = input.dataset.rep;
+        const field = input.dataset.field;
+        input.value = currentData[rep][field] || 0;
+      }
+    });
+  }
 });
 
-render(defaultData());
+// Initial render
+render({});
 </script>
 
 </body>
