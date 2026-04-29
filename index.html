@@ -2,889 +2,565 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Budget — Sam &amp; Katherine</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>May Mayhem — Beycome Sales Competition</title>
 <style>
 :root {
-  --green-dark:  #0d3d20;
-  --green-mid:   #166534;
-  --green:       #16a34a;
-  --green-light: #22c55e;
-  --green-bg:    #f0fdf4;
-  --red:         #ef4444;
-  --red-bg:      #fef2f2;
-  --amber:       #d97706;
-  --amber-bg:    #fffbeb;
-  --blue:        #2563eb;
-  --blue-bg:     #eff6ff;
-  --bg:          #f0f1ed;
-  --card:        #ffffff;
-  --text:        #111827;
-  --muted:       #6b7280;
-  --faint:       #9ca3af;
-  --border:      rgba(0,0,0,0.07);
-  --shadow:      0 2px 16px rgba(0,0,0,0.08);
-  --r:           20px;
+  --coral: #FF9B77;
+  --coral-soft: #FEEEE7;
+  --gray: #B8BCC0;
+  --indigo: #7D8FF7;
+  --indigo-soft: #ECEEFE;
+  --navy: #152330;
+  --bg: #F5F5F4;
+  --surface: #FFFFFF;
+  --text: #1A1A1A;
+  --text-2: #5F5E5A;
+  --text-3: #9A9892;
+  --border: rgba(0,0,0,0.06);
+  --border-2: rgba(0,0,0,0.10);
+  --mint: #4FCAA0;
+  --mint-soft: #E1F5EE;
+  --rose: #F4A4B8;
+  --rose-soft: #FBEAF0;
+  --amber: #F4B95C;
+  --amber-soft: #FAEEDA;
+  --purple: #B69CE0;
+  --purple-soft: #EFE9F8;
+  --radius: 14px;
+  --radius-sm: 10px;
+  --radius-pill: 999px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.5; }
-.login-wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; background: var(--green-dark); }
-.login-box { background: var(--card); border-radius: var(--r); padding: 40px 32px; max-width: 340px; width: 100%; text-align: center; }
-.login-box h1 { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
-.login-box p { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
-.login-box input { width: 100%; padding: 14px 16px; font-size: 15px; border: 1.5px solid #e5e7eb; border-radius: 12px; margin-bottom: 12px; font-family: inherit; outline: none; }
-.login-box input:focus { border-color: var(--green); }
-.login-box button { width: 100%; padding: 14px; background: var(--green-dark); color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
-.login-error { color: var(--red); font-size: 13px; margin-top: 10px; min-height: 18px; }
-.app { display: flex; flex-direction: column; max-width: 430px; margin: 0 auto; min-height: 100vh; }
-.content { flex: 1; overflow-y: auto; padding: 0 0 90px; }
-.topbar { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px 8px; }
-.greeting { font-size: 13px; color: var(--muted); }
-.topbar-name { font-size: 18px; font-weight: 800; }
-.topbar-right { display: flex; align-items: center; gap: 10px; }
-.sync-badge { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); }
-.sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green-light); flex-shrink: 0; }
-.sync-dot.syncing { background: var(--amber); }
-.sync-dot.error   { background: var(--red); }
-.user-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; cursor: pointer; border: 2.5px solid transparent; }
-.user-avatar.sam { background: var(--green-dark); }
-.user-avatar.katherine { background: #9f1239; }
-.user-avatar.active { border-color: var(--green-light); }
-.hero { background: linear-gradient(140deg, var(--green-dark) 0%, #1a5c35 100%); margin: 8px 16px 0; border-radius: var(--r); padding: 24px; color: white; position: relative; overflow: hidden; }
-.hero::before { content: ''; position: absolute; right: -40px; top: -40px; width: 180px; height: 180px; border-radius: 50%; background: rgba(255,255,255,0.05); }
-.hero-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; opacity: .7; margin-bottom: 4px; }
-.hero-amount { font-size: 38px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 14px; }
-.hero-chips { display: flex; gap: 8px; flex-wrap: wrap; }
-.hero-chip { background: rgba(255,255,255,0.13); border-radius: 20px; padding: 5px 12px; font-size: 12px; font-weight: 500; }
-.stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 14px 16px 0; }
-.stat-card { background: var(--card); border-radius: var(--r); padding: 16px; box-shadow: var(--shadow); }
-.stat-lbl { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
-.stat-val { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
-.stat-sub { font-size: 11px; color: var(--faint); margin-top: 2px; }
-.card { background: var(--card); border-radius: var(--r); margin: 14px 16px 0; padding: 20px; box-shadow: var(--shadow); }
-.card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.card-title { font-size: 16px; font-weight: 800; }
-.card-link { font-size: 13px; color: var(--green); font-weight: 600; cursor: pointer; }
-.prog-bar { height: 10px; background: #e5e7eb; border-radius: 5px; overflow: hidden; margin-bottom: 8px; }
-.prog-fill { height: 100%; border-radius: 5px; background: var(--green-light); transition: width .4s; }
-.prog-fill.close { background: var(--amber); }
-.prog-fill.over { background: var(--red); }
-.budget-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
-.budget-spent { font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; }
-.budget-total { font-size: 15px; color: var(--muted); }
-.budget-foot { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); }
-.safe-chip { color: var(--green); font-weight: 600; }
-.txn-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
-.txn-item:last-child { border-bottom: none; }
-.txn-icon { width: 40px; height: 40px; border-radius: 12px; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-.txn-info { flex: 1; min-width: 0; }
-.txn-name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.txn-date { font-size: 12px; color: var(--muted); }
-.txn-amt { font-size: 14px; font-weight: 700; color: var(--red); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.txn-del { background: none; border: none; color: var(--faint); cursor: pointer; font-size: 20px; padding: 0 4px; line-height: 1; }
-.dp-input { font-family: inherit; font-size: 15px; font-weight: 700; border: 1.5px solid var(--border); border-radius: 8px; padding: 5px 8px; width: 90px; outline: none; color: var(--text); background: var(--bg); -moz-appearance: textfield; }
-.dp-input::-webkit-outer-spin-button, .dp-input::-webkit-inner-spin-button { -webkit-appearance: none; }
-.dp-input:focus { border-color: var(--green); }
-.dp-btn { font-family: inherit; font-size: 13px; font-weight: 700; background: var(--green); color: white; border: none; border-radius: 8px; padding: 6px 14px; cursor: pointer; white-space: nowrap; }
-.dp-btn:active { opacity: .8; }
-.insight { background: var(--green-dark); border-radius: 16px; padding: 18px; margin: 14px 16px 0; }
-.insight-badge { display: inline-block; background: rgba(255,255,255,0.15); border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 600; color: white; margin-bottom: 10px; }
-.insight-title { font-size: 19px; font-weight: 800; color: white; line-height: 1.3; margin-bottom: 8px; }
-.insight-title span { color: var(--green-light); }
-.insight-body { font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.5; }
-.cat-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
-.cat-item:last-child { border-bottom: none; }
-.cat-dot { width: 10px; height: 10px; min-width: 10px; border-radius: 50%; }
-.cat-info { flex: 1; }
-.cat-name { font-size: 14px; font-weight: 600; }
-.cat-bar { height: 4px; background: #e5e7eb; border-radius: 2px; margin-top: 5px; overflow: hidden; }
-.cat-fill { height: 100%; border-radius: 2px; }
-.cat-right { text-align: right; }
-.cat-amt { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
-.cat-pct { font-size: 11px; color: var(--muted); }
-.log-form { display: flex; flex-direction: column; gap: 10px; }
-.log-form select, .log-form input { font-family: inherit; font-size: 15px; padding: 13px 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; background: var(--bg); color: var(--text); outline: none; }
-.log-form select:focus, .log-form input:focus { border-color: var(--green); }
-.log-row { display: flex; gap: 10px; }
-.log-row input { flex: 1; }
-.log-submit { padding: 14px; background: var(--green-dark); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
-.month-tabs { display: flex; gap: 8px; padding: 14px 16px 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-.month-tab { padding: 8px 18px; border-radius: 20px; border: none; background: var(--card); font-size: 14px; cursor: pointer; font-family: inherit; color: var(--muted); font-weight: 600; white-space: nowrap; box-shadow: var(--shadow); flex-shrink: 0; }
-.month-tab.active { background: var(--green-dark); color: white; }
-.pc-card { background: var(--card); border-radius: var(--r); margin: 12px 16px 0; padding: 20px; box-shadow: var(--shadow); }
-.pc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
-.pc-lbl { font-size: 13px; color: var(--muted); margin-bottom: 3px; }
-.pc-amt { font-size: 28px; font-weight: 800; }
-.pc-after { text-align: right; }
-.pc-after-lbl { font-size: 12px; color: var(--muted); margin-bottom: 2px; }
-.pc-after-val { font-size: 20px; font-weight: 800; }
-.pc-group { margin-bottom: 14px; }
-.pc-group-ttl { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 8px; }
-.pc-line { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
-.pc-line:last-child { border-bottom: none; }
-.pc-line-icon { width: 30px; height: 30px; min-width: 30px; border-radius: 8px; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 13px; }
-.pc-line-info { flex: 1; min-width: 0; }
-.pc-line-name { font-size: 14px; font-weight: 600; }
-.pc-line-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
-.pc-line-amt { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.pc-line-amt.blue { color: var(--blue); }
-.pc-line-amt.green { color: var(--green); }
-.pc-check { width: 18px; height: 18px; accent-color: var(--green); cursor: pointer; flex-shrink: 0; }
-.pc-result { background: var(--green-bg); border-radius: 12px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; }
-.pc-result-lbl { font-size: 13px; color: var(--green-mid); font-weight: 600; }
-.pc-result-val { font-size: 22px; font-weight: 800; color: var(--green-dark); }
-.pc-result.tight { background: var(--amber-bg); }
-.pc-result.tight .pc-result-lbl { color: var(--amber); }
-.pc-result.tight .pc-result-val { color: var(--amber); }
-.debt-card { background: var(--card); border-radius: var(--r); margin: 12px 16px 0; padding: 20px; box-shadow: var(--shadow); }
-.debt-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
-.debt-name { font-size: 16px; font-weight: 800; }
-.badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 700; }
-.badge.urgent { background: var(--red-bg); color: var(--red); }
-.badge.high { background: var(--amber-bg); color: var(--amber); }
-.badge.medium { background: var(--blue-bg); color: var(--blue); }
-.debt-meta { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
-.debt-bal-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.debt-bal-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 2px; }
-.debt-bal-input { font-family: inherit; font-size: 26px; font-weight: 800; border: none; outline: none; background: transparent; color: var(--text); width: 155px; font-variant-numeric: tabular-nums; -moz-appearance: textfield; }
-.debt-bal-input::-webkit-outer-spin-button, .debt-bal-input::-webkit-inner-spin-button { -webkit-appearance: none; }
-.debt-bal-input:focus { color: var(--green); }
-.debt-paid-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 2px; }
-.debt-paid-val { font-size: 17px; font-weight: 700; color: var(--green); }
-.debt-prog-bg { height: 10px; background: #e5e7eb; border-radius: 5px; overflow: hidden; margin-bottom: 6px; }
-.debt-prog-fill { height: 100%; border-radius: 5px; background: var(--green-light); }
-.debt-prog-fill.red { background: var(--red); }
-.debt-prog-fill.amber { background: var(--amber); }
-.debt-prog-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
-.debt-total-wrap { background: var(--green-dark); border-radius: var(--r); margin: 14px 16px; padding: 22px; text-align: center; color: white; }
-.debt-total-lbl { font-size: 12px; opacity: .7; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 4px; }
-.debt-total-val { font-size: 40px; font-weight: 800; }
-.debt-total-sub { font-size: 13px; opacity: .7; margin-top: 6px; }
-.alert-banner { border-radius: 14px; padding: 14px 16px; font-size: 14px; line-height: 1.5; margin: 12px 16px 0; }
-.alert-banner.blue { background: var(--blue-bg); color: #1e3a8a; border-left: 4px solid var(--blue); }
-.alert-banner.green { background: var(--green-bg); color: #14532d; border-left: 4px solid var(--green); }
-.alert-banner.amber { background: var(--amber-bg); color: var(--amber); border-left: 4px solid var(--amber); }
-.bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: var(--card); border-top: 1px solid var(--border); padding: 10px 8px 22px; display: flex; justify-content: space-around; z-index: 100; }
-.nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; border: none; background: none; cursor: pointer; color: var(--faint); font-family: inherit; padding: 4px; }
-.nav-btn svg { width: 24px; height: 24px; }
-.nav-btn span { font-size: 11px; font-weight: 600; }
-.nav-btn.active { color: var(--green-dark); }
-.tab { display: none; }
-.tab.active { display: block; }
-.section-head { padding: 16px 16px 0; }
-.section-head h2 { font-size: 22px; font-weight: 800; }
-.section-head p { font-size: 13px; color: var(--muted); margin-top: 2px; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, system-ui, sans-serif;
+  background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.topnav {
+  background: var(--surface); border-bottom: 0.5px solid var(--border);
+  padding: 14px 32px; display: flex; justify-content: space-between; align-items: center;
+}
+.topnav-left { display: flex; align-items: center; gap: 16px; }
+.menu-icon { width: 22px; height: 22px; display: flex; flex-direction: column; justify-content: space-between; }
+.menu-icon span { height: 2px; background: var(--text); border-radius: 1px; width: 100%; }
+.brand { display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+.brand-icon { width: 26px; height: 26px; background: var(--coral); border-radius: 7px; display: flex; align-items: center; justify-content: center; color: white; font-size: 13px; font-weight: 700; }
+.live-indicator {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--mint-soft); color: #0F6E56;
+  padding: 5px 12px; border-radius: var(--radius-pill);
+  font-size: 12px; font-weight: 500;
+}
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mint); animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(0.85); } }
+.main { max-width: 1400px; margin: 0 auto; padding: 32px 40px 80px; }
+.page-header { margin-bottom: 28px; }
+.page-title { font-size: 28px; font-weight: 700; letter-spacing: -0.01em; display: flex; align-items: center; gap: 12px; }
+.page-title-trophy { font-size: 26px; }
+.page-subtitle { color: var(--text-2); font-size: 14px; margin-top: 4px; }
+.card { background: var(--surface); border-radius: var(--radius); padding: 22px 26px; border: 0.5px solid var(--border); }
+.hero-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+.stat-card .stat-label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-2); margin-bottom: 14px; }
+.stat-dot { width: 7px; height: 7px; border-radius: 50%; }
+.stat-dot.coral { background: var(--coral); }
+.stat-dot.indigo { background: var(--indigo); }
+.stat-dot.mint { background: var(--mint); }
+.stat-dot.amber { background: var(--amber); }
+.stat-value { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; font-variant-numeric: tabular-nums; }
+.stat-meta { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--text-2); margin-bottom: 14px; flex-wrap: wrap; }
+.pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 500; white-space: nowrap; }
+.pill.coral-pill { background: var(--coral-soft); color: #B5562A; }
+.pill.mint-pill { background: var(--mint-soft); color: #0F6E56; }
+.pill.indigo-pill { background: var(--indigo-soft); color: #4A4FA5; }
+.pill.amber-pill { background: var(--amber-soft); color: #854F0B; }
+.pill.purple-pill { background: var(--purple-soft); color: #5E408C; }
+.progress-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-2); margin-top: 12px; margin-bottom: 6px; }
+.progress-bar { height: 5px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 3px; transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+.progress-fill.coral { background: var(--coral); }
+.progress-fill.mint { background: var(--mint); }
+.champion-info { display: flex; align-items: center; gap: 12px; }
+.avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: white; flex-shrink: 0; }
+.avatar.lg { width: 48px; height: 48px; font-size: 14px; }
+.avatar.coral { background: var(--coral); }
+.avatar.indigo { background: var(--indigo); }
+.avatar.mint { background: var(--mint); }
+.avatar.purple { background: #B69CE0; }
+.champion-name { font-size: 17px; font-weight: 600; }
+.champion-detail { font-size: 13px; color: var(--text-2); margin-top: 2px; }
+.section-block-title { margin-bottom: 12px; }
+.section-block-title h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 4px; }
+.section-block-title p { font-size: 13px; color: var(--text-2); }
+.crowns-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+.crown-card { background: var(--surface); border-radius: var(--radius); padding: 20px 22px; border: 0.5px solid var(--border); position: relative; overflow: hidden; }
+.crown-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.crown-card.coral::before { background: var(--coral); }
+.crown-card.indigo::before { background: var(--indigo); }
+.crown-card.purple::before { background: var(--purple); }
+.crown-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.crown-emoji { font-size: 22px; }
+.crown-title { font-size: 14px; font-weight: 600; }
+.crown-prize { font-size: 11px; color: var(--text-2); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.04em; }
+.crown-leader { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg); border-radius: var(--radius-sm); margin-bottom: 12px; }
+.crown-leader-info { flex: 1; min-width: 0; }
+.crown-leader-name { font-weight: 600; font-size: 14px; }
+.crown-leader-stat { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+.crown-leader-value { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.crown-runners { display: flex; flex-direction: column; gap: 6px; }
+.runner-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 4px 0; }
+.runner-name-cell { display: flex; align-items: center; gap: 8px; color: var(--text-2); }
+.runner-rank { font-size: 11px; color: var(--text-3); width: 14px; }
+.runner-mini-avatar { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: white; }
+.runner-value { font-variant-numeric: tabular-nums; font-weight: 500; }
+.lb-table { width: 100%; margin-top: 18px; border-collapse: collapse; }
+.lb-table th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); font-weight: 500; padding: 8px 0; border-bottom: 0.5px solid var(--border); }
+.lb-table th.right { text-align: right; }
+.lb-table td { padding: 16px 0; border-bottom: 0.5px solid var(--border); font-size: 14px; vertical-align: middle; }
+.lb-table tr:last-child td { border-bottom: none; }
+.lb-table td.rank { width: 28px; color: var(--text-3); font-weight: 500; }
+.lb-table td.rank.first { color: var(--coral); font-weight: 600; }
+.lb-rep-cell { display: flex; align-items: center; gap: 12px; }
+.lb-rep-name { font-weight: 500; font-size: 14px; }
+.lb-num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 500; }
+.section-title { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+.section-subtitle { font-size: 13px; color: var(--text-2); margin-top: 2px; }
+.mvp-card { background: linear-gradient(135deg, #FF9B77 0%, #FFB89E 100%); border-radius: var(--radius); padding: 22px 26px; color: white; position: relative; overflow: hidden; }
+.mvp-card::before { content: '🏆'; position: absolute; right: -10px; top: -10px; font-size: 100px; opacity: 0.15; transform: rotate(15deg); }
+.mvp-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.85; margin-bottom: 14px; font-weight: 500; }
+.mvp-name { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 4px; }
+.mvp-stats { display: flex; gap: 24px; margin-top: 16px; }
+.mvp-stat-block .mvp-stat-value { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.mvp-stat-block .mvp-stat-label { font-size: 11px; opacity: 0.85; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.04em; }
+.mvp-pace { display: grid; grid-template-columns: 1fr 1.4fr; gap: 16px; margin-bottom: 20px; }
+.pace-card { background: var(--surface); border-radius: var(--radius); padding: 22px 26px; border: 0.5px solid var(--border); }
+.pace-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
+.pace-big { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.pace-target { font-size: 13px; color: var(--text-2); }
+.prize-pool { background: var(--surface); border-radius: var(--radius); padding: 22px 26px; border: 0.5px solid var(--border); margin-bottom: 20px; }
+.pool-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; }
+.pool-item { padding: 14px; background: var(--bg); border-radius: var(--radius-sm); text-align: center; }
+.pool-amount { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+.pool-label { font-size: 12px; color: var(--text-2); margin-top: 4px; }
+.pool-detail { font-size: 11px; color: var(--text-3); margin-top: 6px; }
+.admin-link { font-size: 11px; color: var(--text-3); text-decoration: none; padding: 4px 8px; border-radius: 6px; }
+.admin-link:hover { color: var(--text-2); background: var(--bg); }
+@media (max-width: 1100px) {
+  .hero-row { grid-template-columns: repeat(2, 1fr); }
+  .crowns-row { grid-template-columns: 1fr; }
+  .mvp-pace { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) {
+  .main { padding: 20px 16px 60px; }
+  .hero-row { grid-template-columns: 1fr; }
+  .pool-grid { grid-template-columns: repeat(2, 1fr); }
+  .topnav { padding: 12px 16px; }
+  .page-title { font-size: 22px; }
+  .stat-value { font-size: 24px; }
+}
 </style>
 </head>
 <body>
 
-<div class="login-wrap" id="login-screen">
-  <div class="login-box">
-    <h1>💰 Budget</h1>
-    <p>Sam &amp; Katherine</p>
-    <input type="password" id="pwd" placeholder="Password" autocomplete="off">
-    <button onclick="doLogin()">Unlock →</button>
-    <div class="login-error" id="login-err"></div>
+<header class="topnav">
+  <div class="topnav-left">
+    <div class="menu-icon"><span></span><span></span><span></span></div>
+    <div class="brand">
+      <div class="brand-icon">b</div>
+      beycome
+    </div>
   </div>
-</div>
+  <div class="topnav-right" style="display: flex; align-items: center; gap: 14px;">
+    <div class="live-indicator">
+      <span class="live-dot"></span>
+      <span>Live</span>
+    </div>
+  </div>
+</header>
 
-<div class="app" id="app" style="display:none">
-  <div class="content" id="content">
+<main class="main">
+  <div class="page-header">
+    <h1 class="page-title">
+      <span class="page-title-trophy">🏆</span>
+      May Mayhem
+    </h1>
+    <p class="page-subtitle" id="subtitle">Loading...</p>
+  </div>
 
-    <div class="topbar">
+  <div class="hero-row">
+    <div class="card stat-card">
+      <div class="stat-label"><span class="stat-dot coral"></span>Team Revenue</div>
+      <div class="stat-value" id="hero-revenue">$0</div>
+      <div class="stat-meta">
+        <span class="pill coral-pill">May target: $225K</span>
+      </div>
+      <div class="progress-row"><span>Goal $225,000</span><span id="hero-revenue-pct">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill coral" id="hero-revenue-bar" style="width: 0%"></div></div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-label"><span class="stat-dot indigo"></span>Concierge Champion</div>
+      <div class="champion-info" id="hero-concierge">
+        <div class="avatar lg" style="background: var(--gray);">--</div>
+        <div>
+          <div class="champion-name">No data yet</div>
+          <div class="champion-detail">Starts May 1</div>
+        </div>
+      </div>
+      <div style="margin-top: 14px;">
+        <span class="pill indigo-pill">Crown: $200 + Email Badge</span>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-label"><span class="stat-dot mint"></span>Title Attach Rate</div>
+      <div class="stat-value" id="hero-attach">0%</div>
+      <div class="stat-meta">
+        <span class="pill mint-pill">FL+TX deals</span>
+        <span style="color: var(--text-2);" id="hero-attach-detail">0 of 0</span>
+      </div>
+      <div class="progress-row"><span>Team target 40%</span><span id="hero-attach-pct">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill mint" id="hero-attach-bar" style="width: 0%"></div></div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-label"><span class="stat-dot amber"></span>Avg $/Customer Champion</div>
+      <div class="champion-info" id="hero-avg">
+        <div class="avatar lg" style="background: var(--gray);">--</div>
+        <div>
+          <div class="champion-name">No data yet</div>
+          <div class="champion-detail">Starts May 1</div>
+        </div>
+      </div>
+      <div style="margin-top: 14px;">
+        <span class="pill amber-pill">Crown: $200 + Email Badge</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block-title">
+    <h2>👑 The Three Crowns</h2>
+    <p>End-of-month champions take home the big prizes. Win all three = paid day off + handwritten card from Sam.</p>
+  </div>
+
+  <div class="crowns-row" id="crowns-row"></div>
+
+  <div class="card" style="margin-bottom: 20px;">
+    <div>
+      <div class="section-title">Rep Leaderboard</div>
+      <div class="section-subtitle">Live ranking · Updated by Sam</div>
+    </div>
+    <table class="lb-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Rep</th>
+          <th class="right">Revenue</th>
+          <th class="right">Avg/Cust</th>
+          <th class="right">Concierge</th>
+          <th class="right">Title %</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body"></tbody>
+    </table>
+  </div>
+
+  <div class="mvp-pace">
+    <div class="mvp-card">
+      <div class="mvp-label">Current Leader</div>
+      <div class="mvp-name" id="mvp-name">Competition starts<br>Friday May 1</div>
+      <div class="mvp-stats">
+        <div class="mvp-stat-block">
+          <div class="mvp-stat-value" id="days-left">21</div>
+          <div class="mvp-stat-label">Days to win</div>
+        </div>
+        <div class="mvp-stat-block">
+          <div class="mvp-stat-value">$1,400</div>
+          <div class="mvp-stat-label">Prize pool</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pace-card">
+      <div class="pace-row">
+        <div>
+          <div class="section-title">Daily Pace</div>
+          <div class="section-subtitle">$17K target per business day</div>
+        </div>
+        <span class="pill mint-pill" id="pace-status">$0/day</span>
+      </div>
+      <div class="pace-big" id="pace-amount">$0</div>
+      <div class="pace-target">MTD revenue ÷ business days elapsed</div>
+      <div class="progress-row" style="margin-top: 16px;"><span>Pace vs $17K target</span><span id="pace-pct">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill mint" id="pace-bar" style="width: 0%"></div></div>
+    </div>
+  </div>
+
+  <div class="prize-pool">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
       <div>
-        <div class="greeting">Good morning,</div>
-        <div class="topbar-name" id="topbar-name">Sam</div>
+        <div class="section-title">💰 Total Prize Pool</div>
+        <div class="section-subtitle">Cash, perks, recognition</div>
       </div>
-      <div class="topbar-right">
-        <div class="sync-badge"><span class="sync-dot" id="sync-dot"></span><span id="sync-txt">—</span></div>
-        <div class="user-avatar sam active" id="av-sam" onclick="setUser('sam')">S</div>
-        <div class="user-avatar katherine" id="av-kat" onclick="setUser('katherine')">K</div>
+      <div style="font-size: 28px; font-weight: 700; letter-spacing: -0.01em;">$1,400</div>
+    </div>
+    <div class="pool-grid">
+      <div class="pool-item">
+        <div class="pool-amount">$600</div>
+        <div class="pool-label">3 Crown Bonuses</div>
+        <div class="pool-detail">$200 × 3 winners</div>
+      </div>
+      <div class="pool-item">
+        <div class="pool-amount">$750</div>
+        <div class="pool-label">Weekly SPIFFs</div>
+        <div class="pool-detail">$150 × 5 weeks</div>
+      </div>
+      <div class="pool-item">
+        <div class="pool-amount">3</div>
+        <div class="pool-label">Crown Email Badges</div>
+        <div class="pool-detail">June bragging rights</div>
+      </div>
+      <div class="pool-item">
+        <div class="pool-amount">$50</div>
+        <div class="pool-label">Triple Crown</div>
+        <div class="pool-detail">Day off + handwritten card</div>
       </div>
     </div>
+  </div>
 
-    <!-- HOME -->
-    <div class="tab active" id="tab-home">
-      <div class="hero">
-        <div class="hero-label">Monthly Income</div>
-        <div class="hero-amount">$9,909</div>
-        <div class="hero-chips">
-          <div class="hero-chip">💵 Safe to spend: <strong id="hero-safe">—</strong></div>
-          <div class="hero-chip">🎯 Debt-free: Jan 2028</div>
-        </div>
-      </div>
-      <div class="stat-row">
-        <div class="stat-card">
-          <div class="stat-lbl">Monthly Bills</div>
-          <div class="stat-val" id="st-bills">—</div>
-          <div class="stat-sub">Fixed expenses</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-lbl">Total Debt</div>
-          <div class="stat-val" id="st-debt">—</div>
-          <div class="stat-sub">5 accounts</div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-head">
-          <div class="card-title">Spending Budget</div>
-          <div class="card-link" onclick="goTab('stats')">View all →</div>
-        </div>
-        <div class="budget-row">
-          <div class="budget-spent" id="bud-spent">$0</div>
-          <div class="budget-total">/ <span id="bud-total">—</span></div>
-        </div>
-        <div class="prog-bar"><div class="prog-fill" id="bud-bar" style="width:0%"></div></div>
-        <div class="budget-foot">
-          <div class="safe-chip" id="bud-safe">Safe to spend: —</div>
-          <div id="bud-pct" style="font-weight:700">0%</div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-head"><div class="card-title">⚠️ CareCredit Deadline</div></div>
-        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
-          <div style="font-size:42px;font-weight:800;color:var(--amber)" id="cc-days">—</div>
-          <div>
-            <div style="font-weight:700;color:var(--amber)">Days until Nov 1, 2026</div>
-            <div style="font-size:13px;color:var(--muted)">Pay off or get backcharged ALL interest!</div>
-          </div>
-        </div>
-        <div style="margin-top:12px">
-          <div class="prog-bar"><div class="prog-fill close" id="cc-bar" style="width:0%"></div></div>
-          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:5px">
-            <span>Paid: $<span id="cc-paid">0</span></span>
-            <span>Left: $<span id="cc-left">3,400</span></span>
-          </div>
-        </div>
-      </div>
-      <div class="insight">
-        <div class="insight-badge">💡 Insight</div>
-        <div class="insight-title" id="ins-title">Welcome back!</div>
-        <div class="insight-body" id="ins-body">Log your spending to get personalized insights.</div>
-      </div>
-      <div class="card">
-        <div class="card-head">
-          <div class="card-title">Recent Charges</div>
-          <div class="card-link" onclick="goTab('stats')">View all →</div>
-        </div>
-        <div id="recent-list"><div style="text-align:center;padding:20px;color:var(--faint)">No charges yet</div></div>
-      </div>
-    </div>
+  <div style="text-align: center; margin-top: 24px;">
+    <a href="admin.html" class="admin-link">Admin</a>
+  </div>
+</main>
 
-    <!-- SPENDING -->
-    <div class="tab" id="tab-stats">
-      <div class="section-head"><h2>Spending</h2><p>Track every dollar you spend</p></div>
-      <div class="card">
-        <div class="card-title" style="margin-bottom:4px">Total spent this month</div>
-        <div style="font-size:34px;font-weight:800;margin:6px 0;font-variant-numeric:tabular-nums" id="stats-total">$0.00</div>
-        <div style="font-size:13px;color:var(--muted)" id="stats-sub">0 transactions</div>
-      </div>
-      <div class="card">
-        <div class="card-title" style="margin-bottom:14px">By Category</div>
-        <div id="cat-list"></div>
-      </div>
-      <div class="card">
-        <div class="card-title" style="margin-bottom:14px">Log a Charge</div>
-        <div class="log-form">
-          <select id="log-cat">
-            <option value="eating-out">🍔 Eating out / delivery</option>
-            <option value="groceries">🛒 Groceries</option>
-            <option value="gas">⛽ Gas</option>
-            <option value="kid">👶 Kid stuff</option>
-            <option value="impulse">🛍 Impulse / Klarna / Shein</option>
-            <option value="other">📦 Other</option>
-          </select>
-          <div class="log-row">
-            <input type="number" id="log-amt" placeholder="Amount ($)" step="0.01" min="0">
-            <input type="text" id="log-note" placeholder="Note (optional)">
-          </div>
-          <button class="log-submit" onclick="logCharge()">+ Log Charge</button>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title" style="margin-bottom:14px">All Charges</div>
-        <div id="all-charges"><div style="text-align:center;padding:20px;color:var(--faint)">No charges yet</div></div>
-      </div>
-    </div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-    <!-- PAYCHECKS -->
-    <div class="tab" id="tab-paychecks">
-      <div class="section-head"><h2>Paychecks</h2><p>Where every dollar goes</p></div>
-      <div class="month-tabs">
-        <button class="month-tab active" onclick="setMonth('may',this)">May 2026</button>
-        <button class="month-tab" onclick="setMonth('june',this)">June 2026</button>
-        <button class="month-tab" onclick="setMonth('july',this)">July 2026</button>
-      </div>
-      <div id="pc-alert"></div>
-      <div id="pc-cards"></div>
-    </div>
+const firebaseConfig = {
+  apiKey: "AIzaSyDYSG3MvPw1Wl3XPOEif5jssttojbE-78w",
+  authDomain: "beycome-bingo.firebaseapp.com",
+  databaseURL: "https://beycome-bingo-default-rtdb.firebaseio.com",
+  projectId: "beycome-bingo",
+  storageBucket: "beycome-bingo.firebasestorage.app",
+  messagingSenderId: "413778705184",
+  appId: "1:413778705184:web:40248e383f6c8a028ab545"
+};
 
-    <!-- DEBTS -->
-    <div class="tab" id="tab-debts">
-      <div class="section-head"><h2>Debt Payoff</h2><p>Tap any balance to update it</p></div>
-      <div class="alert-banner blue" style="margin-top:12px">
-        <strong>Payoff order:</strong> CareCredit first (0% promo expires Nov 2026), then Discover (25.49%), then Citi (9.9%), then Chase (6%), then Best Egg last.
-      </div>
-      <div id="debt-list"></div>
-      <div class="debt-total-wrap">
-        <div class="debt-total-lbl">Total Remaining Debt</div>
-        <div class="debt-total-val" id="debt-total">—</div>
-        <div class="debt-total-sub">Goal: $0 by January 2028 🎯</div>
-      </div>
-    </div>
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-  </div><!-- /content -->
-
-  <nav class="bottom-nav">
-    <button class="nav-btn active" onclick="goTab('home')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      <span>Home</span>
-    </button>
-    <button class="nav-btn" onclick="goTab('stats')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-      <span>Spending</span>
-    </button>
-    <button class="nav-btn" onclick="goTab('paychecks')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-      <span>Paychecks</span>
-    </button>
-    <button class="nav-btn" onclick="goTab('debts')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-      <span>Debts</span>
-    </button>
-  </nav>
-</div>
-
-<script>
-// ── Data ──────────────────────────────────────────────────────────────────────
-
-var DEBTS0 = [
-  {id:'carecredit', name:'CareCredit',    balance:3400,  original:3400,  min:120, apr:0,     priority:'urgent', note:'0% promo — pay off before Nov 1, 2026 or get backcharged all interest'},
-  {id:'discover',   name:'Discover Card', balance:1695,  original:1695,  min:55,  apr:25.49, priority:'high',   note:'Highest APR · Wipe it out in May'},
-  {id:'citi',       name:'Citi Bank CC',  balance:2615,  original:2615,  min:69,  apr:9.9,   priority:'medium', note:'Closed account · Attack after Discover is gone'},
-  {id:'chase',      name:'Chase CC',      balance:2784,  original:2784,  min:62,  apr:6,     priority:'medium', note:'Closed account · 6% APR'},
-  {id:'bestegg',    name:'Best Egg Loan', balance:11200, original:11200, min:260, apr:24.99, priority:'medium', note:'Last priority — pay minimums while clearing smaller debts first'},
+const REPS = [
+  { id: 'rose',   name: 'Rose Rapsing',     initials: 'RR', color: 'coral' },
+  { id: 'kevin',  name: 'Kevin Gutierrez',  initials: 'KG', color: 'indigo' },
+  { id: 'sharon', name: 'Sharon Jackson',   initials: 'SJ', color: 'mint' },
+  { id: 'marc',   name: 'Marc Jayrold',     initials: 'MJ', color: 'purple' },
 ];
 
-var BILLS = {
-  may:{
-    first:[
-      {name:"VW (Mom's car)",       e:'🚗', amount:459,  due:13},
-      {name:'State Farm',            e:'🛡️', amount:143,  due:15},
-      {name:'Federal student loan',  e:'🎓', amount:91,   due:17},
-      {name:'Tesla (Santander)',     e:'⚡', amount:381,  due:18},
-      {name:'Citi Bank (minimum)',   e:'💳', amount:69,   due:27},
-      {name:'Dog food',              e:'🐕', amount:120,  due:27},
-      {name:'FPL (electric)',        e:'💡', amount:150,  due:30},
-    ],
-    second:[
-      {name:'Cascades — final payment',     e:'🏠', amount:750,  due:1},
-      {name:'New place — 1st month rent',   e:'🏡', amount:1400, due:1, note:'$1,500 already saved — $1,400 more from this check'},
-      {name:'SBA Loan',                     e:'🏦', amount:75,   due:1},
-      {name:'Lexus / Toyota (Katherine)',   e:'🚗', amount:675,  due:1},
-      {name:'Xfinity',                      e:'📡', amount:15,   due:4},
-      {name:'Discover (minimum)',           e:'💳', amount:55,   due:6},
-      {name:'CareCredit (minimum)',         e:'💳', amount:120,  due:7},
-      {name:'Chase CC (minimum)',           e:'💳', amount:62,   due:9},
-      {name:'Best Egg',                     e:'💳', amount:260,  due:12},
-    ],
-  },
-  june:{
-    first:[
-      {name:"VW (Mom's car)",       e:'🚗', amount:459,  due:13},
-      {name:'State Farm',            e:'🛡️', amount:143,  due:15},
-      {name:'Federal student loan',  e:'🎓', amount:91,   due:17},
-      {name:'Tesla (Santander)',     e:'⚡', amount:381,  due:18},
-      {name:'Citi Bank (minimum)',   e:'💳', amount:69,   due:27},
-      {name:'Dog food',              e:'🐕', amount:120,  due:27},
-      {name:'FPL (electric)',        e:'💡', amount:150,  due:30},
-    ],
-    second:[
-      {name:'Rent — new place',             e:'🏠', amount:2900, due:1},
-      {name:'Lawn',                         e:'🌿', amount:50,   due:1},
-      {name:'SBA Loan',                     e:'🏦', amount:75,   due:1},
-      {name:'Lexus / Toyota (Katherine)',   e:'🚗', amount:675,  due:1},
-      {name:'Xfinity',                      e:'📡', amount:15,   due:4},
-      {name:'CareCredit (minimum)',         e:'💳', amount:120,  due:7},
-      {name:'Chase CC (minimum)',           e:'💳', amount:62,   due:9},
-      {name:'Best Egg',                     e:'💳', amount:260,  due:12},
-    ],
-  },
-  july:{
-    first:[
-      {name:"VW (Mom's car)",       e:'🚗', amount:459,  due:13},
-      {name:'State Farm',            e:'🛡️', amount:143,  due:15},
-      {name:'Federal student loan',  e:'🎓', amount:91,   due:17},
-      {name:'Tesla (Santander)',     e:'⚡', amount:381,  due:18},
-      {name:'Citi Bank (minimum)',   e:'💳', amount:69,   due:27},
-      {name:'Dog food',              e:'🐕', amount:120,  due:27},
-      {name:'FPL (electric)',        e:'💡', amount:150,  due:30},
-    ],
-    second:[
-      {name:'Rent',                         e:'🏠', amount:2900, due:1},
-      {name:'Water (quarterly)',            e:'💧', amount:180,  due:1},
-      {name:'Lawn',                         e:'🌿', amount:50,   due:1},
-      {name:'SBA Loan',                     e:'🏦', amount:75,   due:1},
-      {name:'Lexus / Toyota (Katherine)',   e:'🚗', amount:675,  due:1},
-      {name:'Xfinity',                      e:'📡', amount:15,   due:4},
-      {name:'CareCredit (minimum)',         e:'💳', amount:120,  due:7},
-      {name:'Chase CC (minimum)',           e:'💳', amount:62,   due:9},
-      {name:'Best Egg',                     e:'💳', amount:260,  due:12},
-    ],
-  },
-};
-
-var PLAN = {
-  may:{
-    first:  {debt:[{id:'discover',   name:'Discover — wipe it out!',    e:'💥', amount:1640, note:'One big push kills it before rent goes up in June'}], save:350},
-    second: {debt:[{id:'carecredit', name:'CareCredit extra payment',   e:'🎯', amount:447,  note:'Brings total to $567/mo — on pace to beat Nov deadline'}], save:350},
-  },
-  june:{
-    first:  {debt:[{id:'carecredit', name:'CareCredit extra',  e:'🎯', amount:447, note:'Keep $567/mo to beat Nov deadline'},{id:'citi', name:'Citi Bank extra', e:'💳', amount:744, note:'Route Discover money here now'}], save:350},
-    second: {debt:[], save:0},
-  },
-  july:{
-    first:  {debt:[{id:'carecredit', name:'CareCredit extra',  e:'🎯', amount:280, note:'Stay on track before Nov'},{id:'citi', name:'Citi Bank extra', e:'💳', amount:911, note:'Almost done — finish strong'}], save:350},
-    second: {debt:[], save:0},
-  },
-};
-
-var MONTH_NOTE = {
-  may:  {cls:'green', txt:'🎯 <strong>May power month</strong> — rent is still $2,220 here vs $2,900 at the new place. Use that $680 difference to kill Discover before June.'},
-  june: {cls:'amber', txt:'⚠️ <strong>Rent goes up this month.</strong> Tighter budget — stay disciplined on eating out and daily spending.'},
-  july: {cls:'blue',  txt:'📌 <strong>Discover should be paid off.</strong> CareCredit on track. Keep attacking Citi next.'},
-};
-
-var CATS = {
-  'eating-out': {label:'Eating out',       e:'🍔', target:400,  color:'#16a34a'},
-  'groceries':  {label:'Groceries',        e:'🛒', target:500,  color:'#2563eb'},
-  'gas':        {label:'Gas',              e:'⛽', target:350,  color:'#d97706'},
-  'kid':        {label:'Kid stuff',        e:'👶', target:300,  color:'#7c3aed'},
-  'impulse':    {label:'Impulse / Klarna', e:'🛍', target:100,  color:'#db2777'},
-  'other':      {label:'Other',            e:'📦', target:200,  color:'#64748b'},
-};
-
-
-var TODAY = new Date('2026-04-28');
-
-// ── State ─────────────────────────────────────────────────────────────────────
-
-var S = {
-  user: 'sam',
-  month: 'may',
-  spendLog: [],
-  debts: JSON.parse(JSON.stringify(DEBTS0)),
-  paidBills: {},
-  debtPaid: {},
-
-};
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
+function defaultData() {
+  const data = {};
+  REPS.forEach(r => { data[r.id] = { deals: 0, revenue: 0, flTxDeals: 0, titles: 0, concierge: 0 }; });
+  return data;
+}
 
 function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
-function fmtc(n) { return '$' + n.toFixed(2); }
-function ord(n) { var s=['th','st','nd','rd'],v=n%100; return s[(v-20)%10]||s[v]||s[0]; }
-function el(id) { return document.getElementById(id); }
-function monthLog() { return S.spendLog.filter(function(s){ return new Date(s.date).getMonth()===TODAY.getMonth(); }); }
-function catTotals() {
-  var t={};
-  Object.keys(CATS).forEach(function(c){ t[c]=0; });
-  monthLog().forEach(function(s){ t[s.category]=(t[s.category]||0)+s.amount; });
-  return t;
-}
+function pct(n) { return Math.round(n) + '%'; }
 
-// ── Sync status ───────────────────────────────────────────────────────────────
-
-function setSync(cls, txt) {
-  el('sync-dot').className = 'sync-dot' + (cls ? ' '+cls : '');
-  el('sync-txt').textContent = txt;
-}
-
-// ── Navigation ────────────────────────────────────────────────────────────────
-
-function goTab(name) {
-  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
-  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
-  el('tab-'+name).classList.add('active');
-  var btns = document.querySelectorAll('.nav-btn');
-  var names = ['home','stats','paychecks','debts'];
-  btns[names.indexOf(name)].classList.add('active');
-  el('content').scrollTop = 0;
-  if (name==='paychecks') renderPaychecks();
-  if (name==='debts') renderDebts();
-  if (name==='stats') renderStats();
-}
-
-// ── User ──────────────────────────────────────────────────────────────────────
-
-function setUser(u) {
-  S.user = u;
-  localStorage.setItem('sk-user', u);
-  el('av-sam').className = 'user-avatar sam' + (u==='sam' ? ' active' : '');
-  el('av-kat').className = 'user-avatar katherine' + (u==='katherine' ? ' active' : '');
-  el('topbar-name').textContent = u==='sam' ? 'Sam' : 'Katherine';
-}
-
-function setMonth(m, btn) {
-  S.month = m;
-  document.querySelectorAll('.month-tab').forEach(function(b){ b.classList.remove('active'); });
-  btn.classList.add('active');
-  renderPaychecks();
-}
-
-// ── Login ─────────────────────────────────────────────────────────────────────
-
-function doLogin() {
-  var val = el('pwd').value;
-  if (val === 'Kapri2211') {
-    sessionStorage.setItem('sk-auth', '1');
-    el('login-screen').style.display = 'none';
-    el('app').style.display = 'flex';
-    S.user = localStorage.getItem('sk-user') || 'sam';
-    setUser(S.user);
-    renderAll();
-    startFirebase();
-  } else {
-    el('login-err').textContent = 'Wrong password. Try again.';
-    el('pwd').value = '';
-    el('pwd').focus();
+function businessDaysElapsedInMay() {
+  const today = new Date();
+  const mayStart = new Date(today.getFullYear(), 4, 1);
+  if (today < mayStart) return 0;
+  let count = 0;
+  const cur = new Date(mayStart);
+  const end = today < new Date(today.getFullYear(), 5, 1) ? today : new Date(today.getFullYear(), 5, 0);
+  while (cur <= end) {
+    const day = cur.getDay();
+    if (day !== 0 && day !== 6) count++;
+    cur.setDate(cur.getDate() + 1);
   }
+  return count;
 }
 
-el('pwd').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
-
-// Auto-login if previously authenticated
-if (sessionStorage.getItem('sk-auth') === '1') {
-  el('login-screen').style.display = 'none';
-  el('app').style.display = 'flex';
-  S.user = localStorage.getItem('sk-user') || 'sam';
-  setUser(S.user);
-  renderAll();
-  startFirebase();
+function daysLeftInMay() {
+  const today = new Date();
+  const start = new Date(today.getFullYear(), 4, 1);
+  const end = new Date(today.getFullYear(), 5, 0);
+  if (today < start) return 21;
+  if (today > end) return 0;
+  return Math.max(0, Math.ceil((end - today) / (1000 * 60 * 60 * 24)));
 }
 
-// ── Firebase (optional — app works without it) ─────────────────────────────────
+function render(data) {
+  if (!data) data = defaultData();
 
-function startFirebase() {
-  setSync('syncing', 'Connecting…');
-  setTimeout(function() {
-    try {
-      if (typeof firebase === 'undefined') { setSync('error', 'Offline'); return; }
-      var db = firebase.database();
-      db.ref('budget/samkat').on('value', function(snap) {
-        var d = snap.val();
-        if (d) {
-          S.spendLog  = d.spendLog  || [];
-          S.debts     = d.debts     || JSON.parse(JSON.stringify(DEBTS0));
-          S.paidBills = d.paidBills || {};
-          S.debtPaid  = d.debtPaid  || {};
-          renderAll();
-        }
-        setSync('', 'Synced ✓');
-      }, function() {
-        setSync('error', 'Sync error');
-      });
-      window._fbdb = db;
-    } catch(e) {
-      setSync('error', 'Offline');
-    }
-  }, 500);
-}
-
-function pushToFirebase() {
-  try {
-    if (!window._fbdb) return;
-    setSync('syncing', 'Saving…');
-    window._fbdb.ref('budget/samkat').set({
-      spendLog: S.spendLog, debts: S.debts,
-      paidBills: S.paidBills, debtPaid: S.debtPaid,
-      lastUpdate: Date.now(), lastUser: S.user,
-    }).then(function(){ setSync('','Saved ✓'); })
-      .catch(function(){ setSync('error','Sync error'); });
-  } catch(e) {}
-}
-
-// ── Render: Home ──────────────────────────────────────────────────────────────
-
-function renderHome() {
-  var bills = 0;
-  ['first','second'].forEach(function(pc){
-    BILLS.may[pc].forEach(function(b){ bills += b.amount; });
+  const repStats = REPS.map(r => {
+    const d = data[r.id] || { deals: 0, revenue: 0, flTxDeals: 0, titles: 0, concierge: 0 };
+    return {
+      ...r,
+      deals: d.deals || 0,
+      revenue: d.revenue || 0,
+      flTxDeals: d.flTxDeals || 0,
+      titles: d.titles || 0,
+      concierge: d.concierge || 0,
+      avgPerCustomer: (d.deals > 0) ? (d.revenue / d.deals) : 0,
+      titleAttachPct: (d.flTxDeals > 0) ? ((d.titles / d.flTxDeals) * 100) : 0,
+    };
   });
-  var debtEx = 0;
-  ['first','second'].forEach(function(pc){
-    PLAN.may[pc].debt.forEach(function(d){ debtEx += d.amount; });
-  });
-  var saveTot = PLAN.may.first.save + PLAN.may.second.save;
-  var budget = 9909 - bills - debtEx - saveTot;
-  var total = S.debts.reduce(function(a,d){ return a+d.balance; }, 0);
-  var tots = catTotals();
-  var spent = Object.values(tots).reduce(function(a,v){ return a+v; }, 0);
-  var pct = budget>0 ? Math.min(100,Math.round(spent/budget*100)) : 0;
-  var left = budget - spent;
 
-  el('st-bills').textContent = fmt(bills);
-  el('st-debt').textContent  = fmt(total);
-  el('hero-safe').textContent = fmt(budget) + ' this month';
-  el('bud-spent').textContent = fmt(spent);
-  el('bud-total').textContent = fmt(budget);
-  el('bud-pct').textContent   = pct + '%';
-  el('bud-safe').textContent  = 'Safe to spend: ' + fmt(Math.max(0,left));
-  var bar = el('bud-bar');
-  bar.style.width = pct+'%';
-  bar.className = 'prog-fill' + (pct>100?' over':pct>80?' close':'');
+  const teamRevenue = repStats.reduce((s, r) => s + r.revenue, 0);
+  const teamFlTx = repStats.reduce((s, r) => s + r.flTxDeals, 0);
+  const teamTitles = repStats.reduce((s, r) => s + r.titles, 0);
+  const teamAttach = teamFlTx > 0 ? (teamTitles / teamFlTx) * 100 : 0;
 
-  var cc = S.debts.find(function(d){ return d.id==='carecredit'; });
-  var days = Math.floor((new Date('2026-11-01')-TODAY)/86400000);
-  el('cc-days').textContent = days;
-  if (cc) {
-    var paid = cc.original - cc.balance;
-    el('cc-bar').style.width = Math.min(100,(paid/cc.original)*100)+'%';
-    el('cc-paid').textContent = Math.round(paid).toLocaleString();
-    el('cc-left').textContent = Math.round(cc.balance).toLocaleString();
-  }
-
-  var eo = tots['eating-out']||0;
-  if (eo>400) {
-    el('ins-title').innerHTML = 'Eating out is <span>$'+Math.round(eo-400)+' over budget</span>.';
-    el('ins-body').textContent = 'You\'ve spent '+fmt(eo)+' vs a $400 target. One week of cooking saves ~$150.';
-  } else if (eo>280) {
-    el('ins-title').innerHTML = 'Eating out at <span>'+Math.round(eo/400*100)+'%</span> of budget.';
-    el('ins-body').textContent = fmt(eo)+' spent so far — getting close to $400. Pump the brakes this week.';
+  const today = new Date();
+  const mayStart = new Date(today.getFullYear(), 4, 1);
+  let dayDisplay;
+  if (today < mayStart) {
+    dayDisplay = 'Day 0 of 21 · Starts Friday May 1';
   } else {
-    el('ins-title').innerHTML = 'You\'re <span>on track</span> this month!';
-    el('ins-body').textContent = 'Eating out: '+fmt(eo)+' of $400. Keep logging every charge.';
+    const daysIn = Math.floor((today - mayStart) / (1000 * 60 * 60 * 24)) + 1;
+    dayDisplay = `Day ${Math.min(daysIn, 21)} of 21`;
+  }
+  document.getElementById('subtitle').textContent = `${dayDisplay} · $1,400 prize pool`;
+  document.getElementById('days-left').textContent = daysLeftInMay();
+
+  document.getElementById('hero-revenue').textContent = fmt(teamRevenue);
+  const revenuePct = Math.min(100, (teamRevenue / 225000) * 100);
+  document.getElementById('hero-revenue-pct').textContent = pct(revenuePct);
+  document.getElementById('hero-revenue-bar').style.width = revenuePct + '%';
+
+  document.getElementById('hero-attach').textContent = pct(teamAttach);
+  document.getElementById('hero-attach-detail').textContent = `${teamTitles} of ${teamFlTx} FL+TX deals`;
+  const attachPct = Math.min(100, (teamAttach / 40) * 100);
+  document.getElementById('hero-attach-pct').textContent = pct(attachPct);
+  document.getElementById('hero-attach-bar').style.width = attachPct + '%';
+
+  const concierge = repStats.slice().sort((a, b) => b.concierge - a.concierge);
+  const concWinner = concierge[0];
+  if (concWinner.concierge > 0) {
+    document.getElementById('hero-concierge').innerHTML = `
+      <div class="avatar lg ${concWinner.color}">${concWinner.initials}</div>
+      <div>
+        <div class="champion-name">${concWinner.name}</div>
+        <div class="champion-detail">${concWinner.concierge} concierge sales</div>
+      </div>
+    `;
   }
 
-  var recent = S.spendLog.slice().reverse().slice(0,4);
-  if (!recent.length) {
-    el('recent-list').innerHTML = '<div style="text-align:center;padding:20px;color:var(--faint)">No charges logged yet</div>';
-  } else {
-    el('recent-list').innerHTML = recent.map(function(s,i){
-      var ri = S.spendLog.length-1-i;
-      var cat = CATS[s.category]||{e:'📦',label:s.category};
-      return '<div class="txn-item">'
-        +'<div class="txn-icon">'+cat.e+'</div>'
-        +'<div class="txn-info">'
-          +'<div class="txn-name">'+cat.label+(s.note?' — '+s.note:'')+'</div>'
-          +'<div class="txn-date">'+new Date(s.date).toLocaleDateString('en-US',{month:'short',day:'numeric'})+' · '+(s.user||S.user)+'</div>'
-        +'</div>'
-        +'<div class="txn-amt">-'+fmtc(s.amount)+'</div>'
-        +'<button class="txn-del" onclick="deleteCharge('+ri+')">×</button>'
-      +'</div>';
-    }).join('');
+  const avgRanked = repStats.slice().sort((a, b) => b.avgPerCustomer - a.avgPerCustomer);
+  const avgWinner = avgRanked[0];
+  if (avgWinner.avgPerCustomer > 0) {
+    document.getElementById('hero-avg').innerHTML = `
+      <div class="avatar lg ${avgWinner.color}">${avgWinner.initials}</div>
+      <div>
+        <div class="champion-name">${avgWinner.name}</div>
+        <div class="champion-detail">${fmt(avgWinner.avgPerCustomer)} avg · ${avgWinner.deals} deals</div>
+      </div>
+    `;
   }
 
-  el('debt-total').textContent = fmt(total);
-}
+  renderCrowns(repStats);
+  renderLeaderboard(repStats);
 
-// ── Render: Stats ─────────────────────────────────────────────────────────────
-
-function renderStats() {
-  var log = monthLog();
-  var tots = catTotals();
-  var total = Object.values(tots).reduce(function(a,v){ return a+v; },0);
-  el('stats-total').textContent = fmtc(total);
-  el('stats-sub').textContent = log.length+' transactions this month';
-
-  var nonzero = Object.values(tots).reduce(function(a,v){ return a+v; },0)||1;
-  el('cat-list').innerHTML = Object.keys(CATS).map(function(cat){
-    var info=CATS[cat], spent=tots[cat]||0, tgt=info.target;
-    var barPct=Math.round(spent/nonzero*100)||0;
-    var overStyle = (spent>tgt&&tgt>0) ? 'color:var(--red)' : '';
-    return '<div class="cat-item">'
-      +'<div class="cat-dot" style="background:'+info.color+'"></div>'
-      +'<div class="cat-info">'
-        +'<div class="cat-name">'+info.e+' '+info.label+'</div>'
-        +'<div class="cat-bar"><div class="cat-fill" style="width:'+barPct+'%;background:'+info.color+'"></div></div>'
-      +'</div>'
-      +'<div class="cat-right">'
-        +'<div class="cat-amt" style="'+overStyle+'">'+fmt(spent)+'</div>'
-        +'<div class="cat-pct">'+(tgt>0?'of '+fmt(tgt):'target $0')+'</div>'
-      +'</div>'
-    +'</div>';
-  }).join('');
-
-  var all = S.spendLog.slice().reverse();
-  if (!all.length) {
-    el('all-charges').innerHTML = '<div style="text-align:center;padding:20px;color:var(--faint)">No charges yet</div>';
-  } else {
-    el('all-charges').innerHTML = all.map(function(s,i){
-      var ri=S.spendLog.length-1-i;
-      var cat=CATS[s.category]||{e:'📦',label:s.category};
-      return '<div class="txn-item">'
-        +'<div class="txn-icon">'+cat.e+'</div>'
-        +'<div class="txn-info">'
-          +'<div class="txn-name">'+cat.label+(s.note?' — '+s.note:'')+'</div>'
-          +'<div class="txn-date">'+new Date(s.date).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})+' · '+(s.user||S.user)+'</div>'
-        +'</div>'
-        +'<div class="txn-amt">-'+fmtc(s.amount)+'</div>'
-        +'<button class="txn-del" onclick="deleteCharge('+ri+')">×</button>'
-      +'</div>';
-    }).join('');
+  const mvp = repStats.slice().sort((a, b) => b.revenue - a.revenue)[0];
+  if (mvp.revenue > 0) {
+    document.getElementById('mvp-name').textContent = mvp.name;
   }
+
+  const days = businessDaysElapsedInMay();
+  const pace = days > 0 ? teamRevenue / days : 0;
+  document.getElementById('pace-amount').textContent = fmt(pace);
+  document.getElementById('pace-status').textContent = fmt(pace) + '/day';
+  const pacePct = Math.min(100, (pace / 17000) * 100);
+  document.getElementById('pace-pct').textContent = pct(pacePct);
+  document.getElementById('pace-bar').style.width = pacePct + '%';
 }
 
-function logCharge() {
-  var amt = parseFloat(el('log-amt').value);
-  if (!amt || amt<=0) return;
-  S.spendLog.push({date:new Date().toISOString(), category:el('log-cat').value, amount:amt, note:el('log-note').value, user:S.user});
-  el('log-amt').value=''; el('log-note').value='';
-  renderHome(); renderStats();
-  pushToFirebase();
+function renderCrowns(repStats) {
+  const crownsRow = document.getElementById('crowns-row');
+  const avgSorted = repStats.slice().sort((a, b) => b.avgPerCustomer - a.avgPerCustomer);
+  const titleSorted = repStats.slice().sort((a, b) => b.titleAttachPct - a.titleAttachPct);
+  const concSorted = repStats.slice().sort((a, b) => b.concierge - a.concierge);
+
+  crownsRow.innerHTML = `
+    ${renderCrownCard('coral', 'Avg $/Customer Champion', avgSorted, r => fmt(r.avgPerCustomer), r => `${r.deals} deals`, 'avg')}
+    ${renderCrownCard('indigo', 'Title Attach Champion', titleSorted, r => pct(r.titleAttachPct), r => `${r.titles}/${r.flTxDeals} FL+TX`, 'title')}
+    ${renderCrownCard('purple', 'Concierge Champion', concSorted, r => String(r.concierge), r => `${r.concierge} sales`, 'concierge')}
+  `;
 }
 
-function deleteCharge(idx) {
-  S.spendLog.splice(idx,1);
-  renderHome(); renderStats();
-  pushToFirebase();
+function renderCrownCard(color, title, sorted, valueFn, statFn, type) {
+  const leader = sorted[0];
+  const runners = sorted.slice(1);
+  let hasData = false;
+  if (type === 'avg') hasData = leader.avgPerCustomer > 0;
+  else if (type === 'title') hasData = leader.titleAttachPct > 0;
+  else if (type === 'concierge') hasData = leader.concierge > 0;
+
+  return `
+    <div class="crown-card ${color}">
+      <div class="crown-header">
+        <span class="crown-emoji">👑</span>
+        <div>
+          <div class="crown-title">${title}</div>
+          <div class="crown-prize">$200 + Crown Email Badge</div>
+        </div>
+      </div>
+      <div class="crown-leader">
+        <div class="avatar ${hasData ? leader.color : ''}" style="${!hasData ? 'background: var(--gray);' : ''}">${hasData ? leader.initials : '--'}</div>
+        <div class="crown-leader-info">
+          <div class="crown-leader-name">${hasData ? leader.name : 'No data yet'}</div>
+          <div class="crown-leader-stat">${hasData ? statFn(leader) : 'Awaiting first entry'}</div>
+        </div>
+        <div class="crown-leader-value">${hasData ? valueFn(leader) : '--'}</div>
+      </div>
+      <div class="crown-runners">
+        ${runners.map((r, i) => `
+          <div class="runner-row">
+            <div class="runner-name-cell">
+              <span class="runner-rank">${i + 2}</span>
+              <div class="runner-mini-avatar avatar ${r.color}">${r.initials}</div>
+              <span>${r.name.split(' ')[0]}</span>
+            </div>
+            <span class="runner-value">${valueFn(r)}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
 }
 
-// ── Render: Paychecks ─────────────────────────────────────────────────────────
-
-function renderPaychecks() {
-  var mn=S.month, note=MONTH_NOTE[mn];
-  el('pc-alert').innerHTML='<div class="alert-banner '+note.cls+'" style="margin-top:12px">'+note.txt+'</div>';
-  el('pc-cards').innerHTML = ['first','second'].map(function(pc){
-    var bills=BILLS[mn][pc], plan=PLAN[mn][pc];
-    var billsAmt=bills.reduce(function(a,b){return a+b.amount;},0);
-    var debtAmt=plan.debt.reduce(function(a,d){return a+d.amount;},0);
-    var left=4954-billsAmt-debtAmt-plan.save;
-    var lbl=pc==='first'?'Paycheck 1 — arrives ~the 15th':'Paycheck 2 — arrives ~the 31st';
-
-    var billsHtml=bills.map(function(b,bi){
-      var key=mn+'-'+pc+'-'+bi, paid=S.paidBills[key];
-      return '<div class="pc-line">'
-        +'<div class="pc-line-icon">'+b.e+'</div>'
-        +'<div class="pc-line-info">'
-          +'<div class="pc-line-name" style="'+(paid?'text-decoration:line-through;color:var(--faint)':'')+'">'+b.name+'</div>'
-          +'<div class="pc-line-sub">Due the '+b.due+ord(b.due)+(b.note?' · '+b.note:'')+'</div>'
-        +'</div>'
-        +'<div class="pc-line-amt">'+fmt(b.amount)+'</div>'
-        +'<input type="checkbox" class="pc-check" '+(paid?'checked':'')
-          +' onchange="toggleBill(\''+key+'\',this.checked)">'
-      +'</div>';
-    }).join('');
-
-    var debtHtml=plan.debt.length>0
-      ? plan.debt.map(function(d,di){
-          var key=mn+'-'+pc+'-debt-'+di;
-          var rec=S.debtPaid[key];
-          if(rec){
-            return '<div class="pc-line">'
-              +'<div class="pc-line-icon">'+d.e+'</div>'
-              +'<div class="pc-line-info">'
-                +'<div class="pc-line-name" style="text-decoration:line-through;color:var(--faint)">'+d.name+'</div>'
-                +'<div class="pc-line-sub">Paid <strong style="color:var(--green)">$'+rec.amount.toLocaleString()+'</strong> · <span style="cursor:pointer;color:var(--muted);text-decoration:underline" onclick="undoDebtPaid(\''+key+'\',\''+d.id+'\')">Undo</span></div>'
-              +'</div>'
-              +'<div class="pc-line-amt green">✓ Done</div>'
-            +'</div>';
-          }
-          return '<div class="pc-line" style="flex-wrap:wrap;gap:6px">'
-            +'<div class="pc-line-icon">'+d.e+'</div>'
-            +'<div class="pc-line-info">'
-              +'<div class="pc-line-name">'+d.name+'</div>'
-              +'<div class="pc-line-sub">Plan: '+fmt(d.amount)+' · '+d.note+'</div>'
-            +'</div>'
-            +'<div class="pc-line-amt blue">'+fmt(d.amount)+'</div>'
-            +'<div class="debt-pay-row" style="width:100%;display:flex;align-items:center;gap:8px;padding:6px 0 2px 36px">'
-              +'<span style="font-size:12px;color:var(--muted)">I actually paid:</span>'
-              +'<input id="dp-'+key+'" type="number" value="'+d.amount+'" min="0" step="1" class="dp-input">'
-              +'<button class="dp-btn" onclick="markDebtPaid(\''+key+'\',\''+d.id+'\',\'dp-'+key+'\')">✓ Mark Paid</button>'
-            +'</div>'
-          +'</div>';
-        }).join('')
-      : '<div style="font-size:13px;color:var(--muted);padding:8px 0">✅ Rent takes most of this check — all extra debt payments are on Paycheck 1.</div>';
-
-    var saveHtml=plan.save>0
-      ? '<div class="pc-line"><div class="pc-line-icon">🏦</div><div class="pc-line-info"><div class="pc-line-name">Emergency fund</div></div><div class="pc-line-amt green">'+fmt(plan.save)+'</div></div>'
-      : '<div style="font-size:13px;color:var(--muted);padding:8px 0">No savings this check — tight month.</div>';
-
-    return '<div class="pc-card">'
-      +'<div class="pc-top">'
-        +'<div><div class="pc-lbl">'+lbl+'</div><div class="pc-amt">$4,954</div></div>'
-        +'<div class="pc-after"><div class="pc-after-lbl">Bills total</div><div class="pc-after-val">'+fmt(billsAmt)+'</div></div>'
-      +'</div>'
-      +'<div class="pc-group"><div class="pc-group-ttl">📋 Bills to pay</div>'+billsHtml+'</div>'
-      +'<div class="pc-group"><div class="pc-group-ttl">💳 Attack this debt</div>'+debtHtml+'</div>'
-      +'<div class="pc-group"><div class="pc-group-ttl">🏦 Save this much</div>'+saveHtml+'</div>'
-      +'<div class="pc-result '+(left<500?'tight':'')+'">'
-        +'<div class="pc-result-lbl">💵 Spending money left</div>'
-        +'<div class="pc-result-val">'+fmt(Math.max(0,left))+'</div>'
-      +'</div>'
-    +'</div>';
-  }).join('');
+function renderLeaderboard(repStats) {
+  const sorted = repStats.slice().sort((a, b) => b.revenue - a.revenue);
+  const tbody = document.getElementById('leaderboard-body');
+  tbody.innerHTML = sorted.map((r, i) => `
+    <tr>
+      <td class="rank ${i === 0 ? 'first' : ''}">${i + 1}</td>
+      <td>
+        <div class="lb-rep-cell">
+          <div class="avatar ${r.color}">${r.initials}</div>
+          <div>
+            <div class="lb-rep-name">${r.name}</div>
+            <div style="font-size: 12px; color: var(--text-2); margin-top: 2px;">${r.deals} deals</div>
+          </div>
+        </div>
+      </td>
+      <td class="lb-num">${fmt(r.revenue)}</td>
+      <td class="lb-num">${fmt(r.avgPerCustomer)}</td>
+      <td class="lb-num">${r.concierge}</td>
+      <td class="lb-num">${pct(r.titleAttachPct)}</td>
+    </tr>
+  `).join('');
 }
 
-function toggleBill(key, checked) {
-  S.paidBills[key] = checked;
-  pushToFirebase();
-}
+const dataRef = ref(db, 'may-mayhem/reps');
+onValue(dataRef, (snapshot) => {
+  const data = snapshot.val() || defaultData();
+  render(data);
+});
 
-function markDebtPaid(key, debtId, inputId) {
-  var amt = parseFloat(document.getElementById(inputId).value) || 0;
-  if (amt <= 0) return;
-  var debt = S.debts.find(function(d){ return d.id === debtId; });
-  if (debt) { debt.balance = Math.max(0, debt.balance - amt); }
-  S.debtPaid[key] = { amount: amt };
-  renderAll();
-  pushToFirebase();
-}
-
-function undoDebtPaid(key, debtId) {
-  var rec = S.debtPaid[key];
-  if (!rec) return;
-  var debt = S.debts.find(function(d){ return d.id === debtId; });
-  if (debt) { debt.balance = debt.balance + rec.amount; }
-  delete S.debtPaid[key];
-  renderAll();
-  pushToFirebase();
-}
-
-// ── Render: Debts ─────────────────────────────────────────────────────────────
-
-function renderDebts() {
-  var total = S.debts.reduce(function(a,d){ return a+d.balance; },0);
-  el('debt-total').textContent = fmt(total);
-  el('st-debt').textContent = fmt(total);
-  el('debt-list').innerHTML = S.debts.map(function(d,i){
-    var paid=d.original-d.balance, pct=d.original>0?Math.min(100,(paid/d.original)*100):0;
-    var fillCls=d.priority==='urgent'?'amber':d.priority==='high'?'red':'';
-    var aprTxt=d.apr===0?'0% promo (⚠️ expires Nov 2026)':d.apr+'% APR';
-    return '<div class="debt-card">'
-      +'<div class="debt-top">'
-        +'<div class="debt-name">'+(i+1)+'. '+d.name+'</div>'
-        +'<span class="badge '+d.priority+'">'+d.priority+'</span>'
-      +'</div>'
-      +'<div class="debt-meta">'+aprTxt+' &nbsp;·&nbsp; Min: '+fmt(d.min)+'/mo &nbsp;·&nbsp; '+d.note+'</div>'
-      +'<div class="debt-bal-row">'
-        +'<div><div class="debt-bal-lbl">Remaining balance</div>'
-          +'<input class="debt-bal-input" type="number" value="'+d.balance+'" step="1" onchange="updateDebt(\''+d.id+'\',this.value)"></div>'
-        +'<div style="text-align:right"><div class="debt-paid-lbl">Paid off</div><div class="debt-paid-val">'+fmt(paid)+'</div></div>'
-      +'</div>'
-      +'<div class="debt-prog-bg"><div class="debt-prog-fill '+fillCls+'" style="width:'+pct+'%"></div></div>'
-      +'<div class="debt-prog-labels"><span>'+Math.round(pct)+'% paid off</span><span>of '+fmt(d.original)+'</span></div>'
-    +'</div>';
-  }).join('');
-}
-
-function updateDebt(id, val) {
-  var d = S.debts.find(function(x){ return x.id===id; });
-  if (d) { d.balance=parseFloat(val)||0; renderHome(); renderDebts(); pushToFirebase(); }
-}
-
-// ── Render all ────────────────────────────────────────────────────────────────
-
-function renderAll() {
-  renderHome();
-  renderStats();
-  renderPaychecks();
-  renderDebts();
-}
+render(defaultData());
 </script>
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </body>
 </html>
